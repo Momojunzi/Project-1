@@ -9,17 +9,25 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
-//database test
+var bandApp = {
+	user: "",
+	signIn: function(){
+		$('#sign-in').on('click', function(){
+			user = $('#sign-in-email').val().trim();
+			var pass = $('#sign-in-password').val().trim();
+			console.log(user, pass);
+		});
+	},
+	register: function() {
+		console.log('register clicked');
+	},
+	startApp: function() {
+		this.signIn();
+		this.register();
+	}
+}
 
-var testVar = 2;
-database.ref().set({
-	testVar: testVar
+$(document).ready(function(){
+	bandApp.startApp();
 });
-
-database.ref().on('value', function(snapshot){
-	var data = snapshot.val();
-	console.log(data);
-});
-
-// database test successful
 

@@ -16,7 +16,29 @@
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
   </head>
   <body>
-  
+  		<!--container for sign in page -->
+  		<div class="jumbotron container sign-in-container" id="sign-in-container">
+  			<!--sign in title -->
+  			<div class="row text-center sign-in-title">
+  				<h1 class="col-sm-10 col-sm-offset-1">My Favorite Bands</h1>
+  			</div>
+		    <!--sign in form-->
+		    <form class="row sign-in-form">
+			    <div class="form-group col-sm-8 col-sm-offset-2 sign-in-input">
+				    <label for="sign-in-email">Email address</label>
+				    <input type="email" class="form-control" id="sign-in-email" placeholder="Email">
+			  	</div>
+			  	<div class="form-group col-sm-8 col-sm-offset-2 sign-in-input">
+				    <label for="sign-in-password">Password</label>
+				    <input type="password" class="form-control" id="sign-in-password" placeholder="Password">
+			  	</div>
+			  	<div class="form-group col-sm-8 col-sm-offset-2 text-center">
+			  		<h4><span class="sign-in-submit" id="sign-in">Sign in</span> or <span class="sign-in-submit" id="register">Register</span> for an account!</h4>
+			  	</div> 
+			</form>
+		</div>
+  		
+  	
 
 
   	<!-- link to app.js -->
