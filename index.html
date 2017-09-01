@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-  	<meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>title</title>
 
     <!-- Bootstrap 3.3.7 added -->
@@ -13,13 +13,79 @@
 
     <!-- link to jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
   </head>
+  <!-- page -->
+
   <body>
-  
+  <!-- Nav bar section -->
 
+    <section>
+      <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <a class="navbar-brand ">Muband</a>
+            </div>
+            <button class="nav navbar-nav navbar-right">Login</button>
+      </nav>
+    </section>
 
-  	<!-- link to app.js -->
-  	<script type="text/javascript" src="assets/javascript/app.js"></script>
+    <!--Main Container -->
+    <section>
+      <div class="container">
+        <div class="row">
+        <!-- Band Details -->
+          <div class="col-md-8">
+            <div class="row body-container">
+              <div> <h2 class="in-container-hdr" > Band Name </h2>
+              <hr style="width:98%; border-width:3px;">
+              </div>
+              <div class="col-md-2">
+              <!--Image Div -->
+                <div> <h2 class="in-container-hdr" > Image</h2> </div>
+              </div>
+              <div class="col-md-6">
+              <!-- Content -->
+                <div> <h2 class="in-container-hdr" > Content</h2> </div>
+              </div>
+            </div>
+          </div>
+           <!-- Spotify & Purchase 2 rows for play & purchase-->
+          <div class="col-md-4">
+            <div class="row body-container">
+              <div> <h2 class="in-container-hdr" > Play/Purchase </h2>
+              <hr style="width:98%; border-width:3px;">
+              </div>
+            </div>
+              <!-- Favorites -->
+            <div class="row body-container">
+              <div> <h2 class="in-container-hdr" > Favorites </h2>
+              <hr style="width:98%; border-width:3px;">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Row 2 for Map, Tour list and Social feed -->
+        <div class="row">
+          <!-- Map -->
+          <div class="col-md-4">
+            <div> <h2 class="in-container-hdr" > Tour Map </h2>
+              <hr style="width:98%; border-width:3px;">
+            </div>
+          </div>
+          <!-- Tour List -->
+          <div class="col-md-4">
+            <div> <h2 class="in-container-hdr" > Tour List </h2>
+              <hr style="width:98%; border-width:3px;">
+            </div>
+          </div>
+          <!-- Social Feed need to make sub rows -->
+          <div class="col-md-4">
+            <div> <h2 class="in-container-hdr" > Social </h2>
+              <hr style="width:98%; border-width:3px;">
+            </div>
+          </div>
+
+    
   </body>
 </html>
