@@ -11,15 +11,18 @@ var database = firebase.database();
 
 //database test
 
-var testVar = 2;
-database.ref().set({
-	testVar: testVar
+var app = {
+
+	//call functions that need to be called when the page loads in the start app method
+	startApp: function(){
+
+	},
+
+}
+
+
+
+$(document).ready(function(){
+	//call app.startApp in jquery ready functioin
+	app.startApp();
 });
-
-database.ref().on('value', function(snapshot){
-	var data = snapshot.val();
-	console.log(data);
-});
-
-// database test successful
-
