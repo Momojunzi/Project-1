@@ -10,12 +10,29 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 var bandApp = {
-	user: "",
+	
 	signIn: function(){
 		$('#sign-in').on('click', function(){
-			user = $('#sign-in-email').val().trim();
+			var email = $('#sign-in-email').val().trim();
 			var pass = $('#sign-in-password').val().trim();
-			console.log(user, pass);
+			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
+				console.log(error.code);
+			})
+
+
+			firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+			    // User is signed in.
+			    var displayName = user.displayName;
+			    var userEmail = user.email;
+			    console.log(userEmail);
+			    // ...
+			  } else {
+			    // User is signed out.
+			    // ...
+			  }
+			});
+
 		});
 	},
 	register: function() {
