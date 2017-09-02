@@ -13,15 +13,20 @@
 
     <!-- link to jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
   </head>
+
   <!-- page -->
-
   <body>
-  <!-- Nav bar section -->
 
+<<<<<<< HEAD
      <section>
+=======
+  <!-- Nav bar section -->
+    <section>
+>>>>>>> master
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -32,9 +37,15 @@
 
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
+<<<<<<< HEAD
               <input id="search-input" type="text" class="form-control" placeholder="Search">
             </div>
             <button id="search-button" type="submit" class="btn btn-default">Submit</button>
+=======
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+>>>>>>> master
           </form>
 
         </div>
@@ -44,13 +55,20 @@
     <!--Main Container -->
     <section>
       <div class="container">
+        
+        <!-- row 1 for band info and listen/purchase -->
         <div class="row">
-        <!-- Band Details -->
+
+        <!-- Band Details column-->
           <div class="col-md-8">
-            <div class="row body-container">
-              <div> <h2 class="in-container-hdr" > Band Name </h2>
-              <hr style="width:98%; border-width:3px;">
+            
+            <!-- name row -->
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="in-container-hdr">Band Name</h2>
+                <hr style="border-width:3px;">
               </div>
+<<<<<<< HEAD
               <div class="col-md-2">
               <!--Image Div -->
                 <div> <h2 class="in-container-hdr" > Image</h2> </div>
@@ -60,45 +78,91 @@
               <!-- Content -->
                 <div> <h2 class="in-container-hdr" > Content</h2> </div>
                 <div id="content-div"></div>
-              </div>
+=======
             </div>
+            
+            <!-- content row -->
+            <div class="row">
+              <!--Image column -->
+              <div class="col-md-4">
+                <div> 
+                  <h2 class="in-container-hdr">Image</h2> 
+                </div>
+              </div>
+
+              <!-- Content column-->
+              <div class="col-md-8">
+                <div> 
+                  <h2 class="in-container-hdr">Content</h2> 
+                </div>
+>>>>>>> master
+              </div>
+
+            <!-- close content row -->
+            </div>
+          <!-- close details column -->
           </div>
-           <!-- Spotify & Purchase 2 rows for play & purchase-->
+
+          <!-- Listen & favorite column-->
           <div class="col-md-4">
-            <div class="row body-container">
-              <div> <h2 class="in-container-hdr" > Play/Purchase </h2>
-              <hr style="width:98%; border-width:3px;">
+
+            <!-- listen/purchase row -->
+            <div class="row"> 
+              <div>
+                <h2 class="in-container-hdr">Play/Purchase</h2>
+                <hr style="border-width:3px;">
               </div>
             </div>
-              <!-- Favorites -->
-            <div class="row body-container">
-              <div> <h2 class="in-container-hdr" > Favorites </h2>
-              <hr style="width:98%; border-width:3px;">
+
+            <!-- Favorites row -->
+            <div class="row">
+              <div>
+                <h2 class="in-container-hdr">Favorites</h2>
+                <hr style="border-width:3px;">
               </div>
             </div>
+          
+          <!-- close the listen/fav column -->
           </div>
+        <!-- close the first row -->
         </div>
+
         <!-- Row 2 for Map, Tour list and Social feed -->
         <div class="row">
+          
           <!-- Map -->
           <div class="col-md-4">
-            <div> <h2 class="in-container-hdr" > Tour Map </h2>
-              <hr style="width:98%; border-width:3px;">
-            </div>
-          </div>
-          <!-- Tour List -->
-          <div class="col-md-4">
-            <div> <h2 class="in-container-hdr" > Tour List </h2>
-              <hr style="width:98%; border-width:3px;">
-            </div>
-          </div>
-          <!-- Social Feed need to make sub rows -->
-          <div class="col-md-4">
-            <div> <h2 class="in-container-hdr" > Social </h2>
-              <hr style="width:98%; border-width:3px;">
+            <div> 
+              <h2 class="in-container-hdr">Tour Map</h2>
+              <hr style="border-width:3px;">
             </div>
           </div>
 
+          <!-- Tour List -->
+          <div class="col-md-4">
+            <div> 
+              <h2 class="in-container-hdr" > Tour List </h2>
+              <hr style="border-width:3px;">
+            </div>
+          </div>
+
+          <!-- Social Feed need to make sub rows -->
+          <div class="col-md-4">
+            <div> 
+              <h2 class="in-container-hdr">Social</h2>
+              <hr style="border-width:3px;">
+            </div>
+          </div>
+
+<<<<<<< HEAD
     <script type="text/javascript" src="assets/javascript/app.js"></script>
+=======
+        <!-- close the second row -->
+        </div>
+      <!-- close the container -->
+      </div>
+
+    
+>>>>>>> master
   </body>
 </html>
