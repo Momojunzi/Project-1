@@ -36,7 +36,7 @@ var app = {
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "https://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + this.artist,
+			url: "//api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + this.artist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
@@ -46,7 +46,7 @@ var app = {
 			console.log(data, this.spotify, this.youTube);
 			// get bio info on the artist
 			$.ajax({
-				url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+				url: "//api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
 				method: "GET"
 			}).done(function(response) {
 				console.log(response, response.data.artist_bio_short);
