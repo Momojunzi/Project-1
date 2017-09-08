@@ -15,14 +15,18 @@ var app = {
 	artist: "Glass+Animals",
 	formattedArtist: "",
 	spotify: "",
-	youTube: "", 
+	youtube: "", 
 	bio: "",
 	imageUrl: "",
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		this.callMusicGraph();
-		this.callLastFm();
-		this.searchBand();
+        this.callLastFm();
+        this.searchBand();
+        this.spotifyWidget();
+        this.youtubeLink();
+        this.soundcloud();
+        this.itunes();
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
@@ -36,6 +40,7 @@ var app = {
 			musicGraphId = data.id;
 			this.spotify = data.spotify_id;
 			this.youTube = data.youtube_id;
+            this.artist = data.name;
 			console.log(data, this.spotify, this.youTube);
 			// get bio info on the artist
 			$.ajax({
