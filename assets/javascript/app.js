@@ -72,6 +72,7 @@ var app = {
 			$("#image-div").html('<img class="img-responsive" src=' + this.imageUrl + '>');
 		});
 	},
+
 	searchBand: function() {
 		// click search button
 		$('#search-button').on('click', function(){
@@ -132,6 +133,7 @@ var app = {
 			url: 'http://api.songkick.com/api/3.0/events.json?apikey='
 		})
 	},
+
 	googleMaps: function() {
 		// map options
 		mapOption = {
@@ -158,6 +160,7 @@ var app = {
 		console.log(app.address[0]);
 		
 	}, 
+
 	farmersMarket: function() {
 		zip = 94709;
 		$.ajax({
@@ -192,7 +195,7 @@ var app = {
 			}
 		});
 	}	
-}
+};
 
 
 $(document).ready(function(){
