@@ -23,30 +23,30 @@ var app = {
 	map: {},
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
-		this.callMusicGraph();
-        this.callLastFm();
-        this.searchBand();
-        this.spotifyWidget();
-        this.youtubeLink();
-        this.soundcloud();
-        this.itunes();
-		this.googleMaps();
-		this.farmersMarket();
+		app.callMusicGraph();
+        app.callLastFm();
+        app.searchBand();
+        app.spotifyWidget();
+        app.youtubeLink();
+        app.soundcloud();
+        app.itunes();
+		app.googleMaps();
+		app.farmersMarket();
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + this.artist,
+			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.artist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
 			musicGraphId = data.id;
-			this.spotify = data.spotify_id;
-			this.youTube = data.youtube_id;
-            this.artist = data.name;
-			console.log(data, this.spotify, this.youTube);
+			app.spotify = data.spotify_id;
+			app.youTube = data.youtube_id;
+            app.artist = data.name;
+			console.log(data, app.spotify, app.youTube);
 			// get bio info on the artist
 			$.ajax({
 				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
@@ -54,9 +54,9 @@ var app = {
 			}).done(function(response) {
 				console.log(response, response.data.artist_bio_short);
 				//get short bio and parse the markup returned
-				this.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
-				console.log(this.bio);
-				$('#content-div').html('<h4>' + this.bio + '<h4>');//remove and put in a different function that draws to the page
+				app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
+				console.log(app.bio);
+				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
 			})
 		});
 	},
@@ -64,12 +64,12 @@ var app = {
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + this.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
 			console.log(typeof(response.artist.image[3]['#text']));
-			this.imageUrl = response.artist.image[3]['#text'];
-			$("#image-div").html('<img class="img-responsive" src=' + this.imageUrl + '>');
+			app.imageUrl = response.artist.image[3]['#text'];
+			$("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
 		});
 	},
 
