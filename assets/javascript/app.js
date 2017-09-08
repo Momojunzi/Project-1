@@ -85,8 +85,6 @@ var app = {
 			app.callLastFm();
 			console.log(app.formattedArtist);
 		});
-<<<<<<< HEAD
-
 	},
 
     spotifyWidget: function() {
@@ -127,7 +125,6 @@ var app = {
     }
 
 };
-=======
 		
 	},
 	songKick: function() {
@@ -152,7 +149,6 @@ var app = {
 		infoWindow = new google.maps.InfoWindow({
 			content: "holding..."
 		});
->>>>>>> googlemap
 
 		//make new map centered on us
 		map = new google.maps.Map(document.getElementById("map"), mapOption);
