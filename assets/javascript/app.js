@@ -62,7 +62,44 @@ var app = {
 		
 	}
 
-}
+    spotifyWidget: function() {
+        $('#spotify-widget').on('click', function() {
+            event.preventDefault();
+            console.log(app.spotify);
+            // re-align widget, override the default margin
+            $('#listen-row').attr('style','margin-left: 0px;');
+            $('#listen-row').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
+        });
+    },
+
+    youtubeLink: function() {
+        $('#youtube-link').on('click', function() {
+            event.preventDefault();
+            console.log(app.youtube);
+            window.open('https://www.youtube.com/channel/' + app.youtube);
+        });
+    }, 
+
+    soundcloud: function() {
+        $('#soundcloud-link').on('click', function() {
+            event.preventDefault();
+            console.log(app.artist.replace(/\s/g, ''));
+            // does not always work. some artist's links are different from just their names
+            // for example, soundcloud.com/glassanimals works fine but
+            // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
+            window.open('https://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
+        });
+    },
+
+    itunes: function() {
+        $('#itunes-link').on('click', function() {
+            event.preventDefault();
+            console.log('hi')
+            // $('#itunes-link').attr('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
+        });
+    }
+
+};
 
 
 
