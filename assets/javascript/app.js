@@ -10,6 +10,7 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 //database test
+var map;
 
 var app = {
 	artist: "Glass+Animals",
@@ -18,22 +19,33 @@ var app = {
 	youtube: "", 
 	bio: "",
 	imageUrl: "",
+	address: [],
+	map: {},
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		this.callMusicGraph();
+<<<<<<< HEAD
         this.callLastFm();
         this.searchBand();
         this.spotifyWidget();
         this.youtubeLink();
         this.soundcloud();
         this.itunes();
+=======
+		this.callLastFm();
+		this.searchBand();
+		this.googleMaps();
+		this.farmersMarket();
+		//this.googleMaps();
+		
+>>>>>>> d9352031238bf7cb87f5a78d7baff62c791da731
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "//api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + this.artist,
+			url: "https://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + this.artist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
@@ -44,7 +56,7 @@ var app = {
 			console.log(data, this.spotify, this.youTube);
 			// get bio info on the artist
 			$.ajax({
-				url: "//api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+				url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
 				method: "GET"
 			}).done(function(response) {
 				console.log(response, response.data.artist_bio_short);
@@ -59,7 +71,7 @@ var app = {
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "//ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + this.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + this.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
 			console.log(typeof(response.artist.image[3]['#text']));
@@ -83,7 +95,6 @@ var app = {
 			app.callLastFm();
 			console.log(app.formattedArtist);
 		});
-
 	},
 
     spotifyWidget: function() {
@@ -124,7 +135,74 @@ var app = {
     }
 
 };
+		
+	},
+	songKick: function() {
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/events.json?apikey='
+		})
+	},
+	googleMaps: function() {
+		// map options
+		mapOption = {
+			zoom: 10,
+			center: new google.maps.LatLng(37.871853, -122.258423),
+			panControl: false,
+			zoomControl: true,
+			zoomControlOptions: {
+				style: google.maps.ZoomControlStyle.LARGE,
+				position: google.maps.ControlPosition.RIGHT_CENTER
+			},
+			scaleControl: false
+		}
 
+		infoWindow = new google.maps.InfoWindow({
+			content: "holding..."
+		});
+
+		//make new map centered on us
+		map = new google.maps.Map(document.getElementById("map"), mapOption);
+		
+		console.log(map);
+		coordArr = app.address;
+		console.log(app.address[0]);
+		
+	}, 
+	farmersMarket: function() {
+		zip = 94709;
+		$.ajax({
+			url:  "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+			method: "GET"
+		}).done(function(response){
+			/*console.log(response);*/
+			var marketArr = response.results;
+			for(var i=0; i < marketArr.length; i++){
+				var id = marketArr[i].id;
+				$.ajax({
+					url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+					method:"GET"
+				}).done(function(response) {
+					/*console.log(response);*/
+					var googleLink = response.marketdetails.GoogleLink;
+					/*console.log(googleLink);*/
+					var latLng = decodeURIComponent(googleLink.substring(googleLink.indexOf("=")+1, googleLink.lastIndexOf("(")));
+					/*console.log(latLng);*/
+					//app.address.push(latLng);
+					var split = latLng.split(',');
+					var lat = split[0];
+					var long = split[1];
+					var mylatlng = new google.maps.LatLng(lat, long);
+					/*console.log(mylatlng);*/
+					var marker = new google.maps.Marker({
+						map: map,
+						position: mylatlng
+					});
+					console.log(marker);
+				});
+			}
+		});
+	}	
+}
 
 
 $(document).ready(function(){
