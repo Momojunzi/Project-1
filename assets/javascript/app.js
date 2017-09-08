@@ -130,7 +130,7 @@ var app = {
 	},
 	songKick: function() {
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/events.json?apikey='
+			url: '//api.songkick.com/api/3.0/events.json?apikey='
 		})
 	},
 
@@ -164,7 +164,7 @@ var app = {
 	farmersMarket: function() {
 		zip = 94709;
 		$.ajax({
-			url:  "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+			url:  "//search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
 			method: "GET"
 		}).done(function(response){
 			/*console.log(response);*/
@@ -172,7 +172,7 @@ var app = {
 			for(var i=0; i < marketArr.length; i++){
 				var id = marketArr[i].id;
 				$.ajax({
-					url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+					url: "//search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
 					method:"GET"
 				}).done(function(response) {
 					/*console.log(response);*/
