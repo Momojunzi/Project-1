@@ -24,21 +24,14 @@ var app = {
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		this.callMusicGraph();
-<<<<<<< HEAD
         this.callLastFm();
         this.searchBand();
         this.spotifyWidget();
         this.youtubeLink();
         this.soundcloud();
         this.itunes();
-=======
-		this.callLastFm();
-		this.searchBand();
 		this.googleMaps();
 		this.farmersMarket();
-		//this.googleMaps();
-		
->>>>>>> d9352031238bf7cb87f5a78d7baff62c791da731
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
