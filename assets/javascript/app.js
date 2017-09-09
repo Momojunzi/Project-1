@@ -128,9 +128,9 @@ var app = {
         });
 		
 	},
-	songKick: function() {
+	callJambase: function() {
 		$.ajax({
-			url: '//api.songkick.com/api/3.0/events.json?apikey='
+			url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5'
 		})
 	},
 
