@@ -27,8 +27,10 @@ var app = {
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		app.getGeoPosition();
+
 		app.addBandName();
 		app.callMusicGraph();
+		app.purchaseLinks();
         app.callLastFm();
         app.searchBand();
         //app.callJambase();
@@ -105,6 +107,7 @@ var app = {
 			app.callMusicGraph();
 			app.callLastFm();
 			app.googleMaps();
+			app.purchaseLinks();
 			console.log(app.formattedArtist);
 		});
 	},
@@ -204,7 +207,7 @@ var app = {
 			
 			//console.log(map);
 			coordArr = app.address;
-			app.callJambase();
+			//app.callJambase();
 			//console.log(app.address[0]);
 		 
 		//function(err) {
@@ -249,6 +252,13 @@ var app = {
 				console.log(err.code) 
 		});
 	},
+
+	purchaseLinks: function(){
+		$('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
+		$('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
+		$('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
+
+	}
 
 	// farmersMarket: function() {
 	// 	zip = 94709;
