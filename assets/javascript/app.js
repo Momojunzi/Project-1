@@ -194,8 +194,117 @@ var app = {
 				});
 			}
 		});
-	}	
+	},
+
+	signIn: function(){
+		$('#sign-in').on('click', function(){
+			var email = $('#sign-in-email').val().trim();
+			var pass = $('#sign-in-password').val().trim();
+			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
+				console.log(error.code);
+			})
+
+
+			firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+			    // User is signed in.
+			    var displayName = user.displayName;
+			    var userEmail = user.email;
+			    console.log(userEmail);
+			    // ...
+			  } else {
+			    // User is signed out.
+			    // ...
+			  }
+			});
+
+		});
+	},
+	register: function() {
+		console.log('Register function executed')
+
+		$('#register-user').on('click', function (event) {
+			console.log('register-user clicked')
+
+			event.preventDefault();
+
+
+			var uname=$('#sign-up-name').val().trim();
+			console.log(uname);
+			var email = $('#sign-up-email').val().trim();
+			console.log(email);
+			var pass = $('#sign-up-password').val().trim();
+			var zip = $('#zipcode').val().trim();
+			
+
+			if (email.length < 4) {
+	      		alert('Please enter an email address.');
+	        	return;
+      		}
+      		if (pass.length < 4) {
+	       	 	alert('Please enter a password.');
+	        	return;
+      		}
+      		if ((zip.length < 5) || (zip.length > 5)) {
+	       	 	alert('Please enter a valid zipcode.');
+	        	return;
+      		}
+      		if (uname.length < 3) {
+	       	 	alert('Name should be of minimum 3 letters.');
+	        	return;
+      		}
+
+      		database.ref().push({
+
+    			email:email,
+    			password:pass,
+    			zip:zip,
+    			uname:uname
+    			//created:firebase.database.ServerValue.TIMESTAMP
+  			});
+
+	      	firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
+		        var errorCode = error.code;
+		        var errorMessage = error.message;
+		        if (errorCode === 'auth/weak-password') {
+		        	alert('The password is too weak.');
+		        } else if (errorCode === 'auth/invalid-email'){
+		        	alert('Invalid E-mail');
+		        } else {
+		        	alert(errorMessage);
+		        }
+		        console.log(error);
+		    });
+
+		    $('#regModal').modal('hide');
+		});
+	},
+	startApp: function() {
+		this.signIn();
+		this.register();
+	}
+	
 };
+
+$("#login-modal").click(function(){
+	$('#regModal').modal('hide');
+	$('#passModal').modal('hide');
+	$('#myModal').modal('show');
+});
+
+
+$("#register-modal").click(function(){
+	$('#myModal').modal('hide');
+	$('#passModal').modal('hide');
+	$('#regModal').modal('show');
+});
+
+$("#fPassword-modal").click(function(){
+	$('#myModal').modal('hide');
+	$('#regModal').modal('hide');
+	$('#passModal').modal('show');
+});
+
 
 
 $(document).ready(function(){
