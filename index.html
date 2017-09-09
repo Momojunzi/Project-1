@@ -54,7 +54,7 @@
         <div class="row">
 
         <!-- Band Details column-->
-          <div class="col-md-8">
+          <div class="col-md-9">
             
             <!-- name row -->
             <div class="row">
@@ -89,7 +89,7 @@
           </div>
 
           <!-- Listen & favorite column-->
-          <div class="col-md-4">
+          <div class="col-md-3">
 
             <!-- listen/purchase row -->
             <div class="row"> 
@@ -111,12 +111,11 @@
                     <button class="btn btn-default" id="soundcloud-link">SoundCloud</button>
                   </div>
                 </div>
+                <div class="row" id="listen-display"></div>
 
                 <div class="row" id="purchase-row">
                   <div class="col-md-4">
-                    <button class="btn btn-default" id="itunes-link">
-                      <!-- <a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-sm.svg) no-repeat;width:70px;height:15px;background-size:contain;"></a> -->
-                    iTunes</button>
+                    <button class="btn btn-default" id="itunes-link">iTunes</button>
 
                   </div>
 
@@ -166,19 +165,37 @@
             </div>
           </div>
 
-          <!-- Social Feed need to make sub rows -->
+          <!-- Social Feed -->
           <div class="col-md-4">
             <div> 
               <h2 class="in-container-hdr">Social</h2>
               <hr style="border-width:3px;">
             </div>
+            <div class="row">
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="twitter-link">Twitter</button>
+              </div>
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="instagram-link">Instagram</button>
+              </div>
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="facebook-link">Facebook</button>
+              </div>
+            </div>
+
+            <div class="row" id="social-display">
+            </div>
           </div>
 
-		<!-- close the second row -->
-		</div>
+    		<!-- close the second row -->
+    		</div>
 
       <!-- close the container -->
       </div>
+    </section>
 
     <script type="text/javascript" src="assets/javascript/app.js"></script>
 	
