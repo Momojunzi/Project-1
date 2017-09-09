@@ -13,8 +13,11 @@ var database = firebase.database();
 var map;
 
 var app = {
-	artist: "Glass+Animals",
-	formattedArtist: "",
+	testZip: 94709,
+	lat: "",
+	long: "",
+	artist: "Glass Animals",
+	formattedArtist: "Glass+Animals",
 	spotify: "",
 	youtube: "", 
 	bio: "",
@@ -23,15 +26,22 @@ var app = {
 	map: {},
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
+		app.getGeoPosition();
+		app.addBandName();
 		app.callMusicGraph();
         app.callLastFm();
         app.searchBand();
+        //app.callJambase();
         app.spotifyWidget();
         app.youtubeLink();
         app.soundcloud();
         app.itunes();
-		app.googleMaps();
-		app.farmersMarket();
+		//app.googleMaps();
+		//app.farmersMarket();
+	},
+
+	addBandName: function(){
+		$('#bandName').html(app.artist);
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
@@ -57,6 +67,12 @@ var app = {
 				app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
 				console.log(app.bio);
 				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
+			});
+			$.ajax({
+				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/metrics/twitter?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+				method: "GET"
+			}).done(function(response) {
+				console.log(response);
 			})
 		});
 	},
@@ -85,8 +101,10 @@ var app = {
 			// format artist name for query string
 			app.formattedArtist = searchedArtist.split(" ").join('+');
 			// recall music graph and last fm to grab artist info
+			app.addBandName();
 			app.callMusicGraph();
 			app.callLastFm();
+			app.googleMaps();
 			console.log(app.formattedArtist);
 		});
 	},
@@ -130,71 +148,142 @@ var app = {
 	},
 	callJambase: function() {
 		$.ajax({
-			url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5'
-		})
+			url: 'http://api.jambase.com/artists?name=' + app.artist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+			method: 'GET'
+		}).done(function(response) {
+			var jambaseId = response.Artists[0].Id;
+			console.log(response, jambaseId);
+			$.ajax({
+				url: 'http://api.jambase.com/events?artistId=' + jambaseId + '&zipCode='+ app.testZip + '&radius=3000&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+				method: 'GET'
+			}).done(function(response) {
+				console.log(response);
+				var eventArr = response.Events;
+				for(var i=0; i<eventArr.length; i++) {
+					var latitude = eventArr[i].Venue.Latitude;
+					var longitude = eventArr[i].Venue.Longitude;
+					console.log(latitude, longitude);
+					var latLng = new google.maps.LatLng(latitude, longitude);
+					console.log(latLng);
+					var marker = new google.maps.Marker({
+						map: map,
+						position: latLng
+					});
+				}
+			});
+		});
 	},
 
 	googleMaps: function() {
-		// map options
-		mapOption = {
-			zoom: 10,
-			center: new google.maps.LatLng(37.871853, -122.258423),
-			panControl: false,
-			zoomControl: true,
-			zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.LARGE,
-				position: google.maps.ControlPosition.RIGHT_CENTER
-			},
-			scaleControl: false
-		}
+		// var lat;
+		// var long;
+		// navigator.geolocation.getCurrentPosition(function(pos){
+		// 	var coords = pos.coords;
+		// 	lat = coords.latitude; 
+		// 	long = coords.longitude;
+		// 	console.log(lat, long);
+			// map options
+			mapOption = {
+				zoom: 10,
+				center: new google.maps.LatLng(app.lat, app.long),
+				panControl: false,
+				zoomControl: true,
+				zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.LARGE,
+					position: google.maps.ControlPosition.RIGHT_CENTER
+				},
+				scaleControl: false
+			}
 
-		infoWindow = new google.maps.InfoWindow({
-			content: "holding..."
-		});
+			infoWindow = new google.maps.InfoWindow({
+				content: "holding..."
+			});
 
-		//make new map centered on us
-		map = new google.maps.Map(document.getElementById("map"), mapOption);
+			//make new map centered on us
+			map = new google.maps.Map(document.getElementById("map"), mapOption);
+			
+			//console.log(map);
+			coordArr = app.address;
+			app.callJambase();
+			//console.log(app.address[0]);
+		 
+		//function(err) {
+		// 	console.log(err.code) 
+		// });
+
 		
-		console.log(map);
-		coordArr = app.address;
-		console.log(app.address[0]);
+		// // map options
+		// mapOption = {
+		// 	zoom: 10,
+		// 	center: new google.maps.LatLng(lat, long),
+		// 	panControl: false,
+		// 	zoomControl: true,
+		// 	zoomControlOptions: {
+		// 		style: google.maps.ZoomControlStyle.LARGE,
+		// 		position: google.maps.ControlPosition.RIGHT_CENTER
+		// 	},
+		// 	scaleControl: false
+		// }
+
+		// infoWindow = new google.maps.InfoWindow({
+		// 	content: "holding..."
+		// });
+
+		// //make new map centered on us
+		// map = new google.maps.Map(document.getElementById("map"), mapOption);
+		
+		// //console.log(map);
+		// coordArr = app.address;
+		// //console.log(app.address[0]);
 		
 	}, 
 
-	farmersMarket: function() {
-		zip = 94709;
-		$.ajax({
-			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
-			method: "GET"
-		}).done(function(response){
-			/*console.log(response);*/
-			var marketArr = response.results;
-			for(var i=0; i < marketArr.length; i++){
-				var id = marketArr[i].id;
-				$.ajax({
-					url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
-					method:"GET"
-				}).done(function(response) {
-					/*console.log(response);*/
-					var googleLink = response.marketdetails.GoogleLink;
-					/*console.log(googleLink);*/
-					var latLng = decodeURIComponent(googleLink.substring(googleLink.indexOf("=")+1, googleLink.lastIndexOf("(")));
-					/*console.log(latLng);*/
-					//app.address.push(latLng);
-					var split = latLng.split(',');
-					var lat = split[0];
-					var long = split[1];
-					var mylatlng = new google.maps.LatLng(lat, long);
-					/*console.log(mylatlng);*/
-					var marker = new google.maps.Marker({
-						map: map,
-						position: mylatlng
-					});
-					console.log(marker);
-				});
-			}
+	getGeoPosition: function() {
+		navigator.geolocation.getCurrentPosition(function(pos){
+			var coords = pos.coords;
+			app.lat = coords.latitude; 
+			app.long = coords.longitude;
+			console.log(app.lat, app.long);
+			app.googleMaps();
+		}, function(err) {
+				console.log(err.code) 
 		});
-	}	
+	},
+
+	// farmersMarket: function() {
+	// 	zip = 94709;
+	// 	$.ajax({
+	// 		url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+	// 		method: "GET"
+	// 	}).done(function(response){
+	// 		/*console.log(response);*/
+	// 		var marketArr = response.results;
+	// 		for(var i=0; i < marketArr.length; i++){
+	// 			var id = marketArr[i].id;
+	// 			$.ajax({
+	// 				url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+	// 				method:"GET"
+	// 			}).done(function(response) {
+	// 				/*console.log(response);*/
+	// 				var googleLink = response.marketdetails.GoogleLink;
+	// 				/*console.log(googleLink);*/
+	// 				var latLng = decodeURIComponent(googleLink.substring(googleLink.indexOf("=")+1, googleLink.lastIndexOf("(")));
+	// 				/*console.log(latLng);*/
+	// 				//app.address.push(latLng);
+	// 				var split = latLng.split(',');
+	// 				var lat = split[0];
+	// 				var long = split[1];
+	// 				var mylatlng = new google.maps.LatLng(lat, long);
+	// 				/*console.log(mylatlng);*/
+	// 				var marker = new google.maps.Marker({
+	// 					map: map,
+	// 					position: mylatlng
+	// 				});
+	// 				//console.log(marker);
+	// 			});
+	// 		}
+	// 	});
+	// }	
 };
 
 
