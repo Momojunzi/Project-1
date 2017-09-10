@@ -36,6 +36,7 @@ var app = {
 	long: "",
 	artist: "Glass Animals",
 	formattedArtist: "Glass+Animals",
+	ontour: "",
 	spotify: "",
 	youtube: "",
     twitter: "",
@@ -46,24 +47,22 @@ var app = {
 	map: {},
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
+		app.callLastFm();
 		app.getGeoPosition();
-
 		app.addBandName();
 		app.callMusicGraph();
-		app.purchaseLinks();
-        app.callLastFm();
+		//app.purchaseLinks();
+        
         app.searchBand();
-        //app.callJambase();
-        app.spotifyWidget();
-        app.youtubeLink();
-        app.soundcloud();
-        app.itunes();
+        //app.spotifyWidget();
+        //app.youtubeLink();
+        //app.soundcloud();
+        //app.itunes();
 		//app.googleMaps();
-		//app.farmersMarket(); 
-		app.twitter();
-		app.instagram();
-        this.signIn();
-        this.register();
+		//app.twitter();
+		//app.instagram();
+        //this.signIn();
+        //this.register();
 	},
 
 	addBandName: function(){
@@ -118,6 +117,8 @@ var app = {
 			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
+			console.log(response);
+			app.ontour = response.artist.ontour;
 			console.log(typeof(response.artist.image[3]['#text']));
 			app.imageUrl = response.artist.image[3]['#text'];
 			$("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
@@ -127,6 +128,15 @@ var app = {
 	searchBand: function() {
 		// click search button
 		$('#search-button').on('click', function(){
+
+			//test to see if google map changes its center and if zip changes markers
+			// var testLat = 39.1620;
+			// var testLong = -84.4569;
+			// app.lat = testLat;
+			// app.long = testLong;
+			// app.testZip = 45202;
+			// end test
+
 			event.preventDefault();
             // clear current displays
             $('#social-display').html('');
@@ -142,10 +152,11 @@ var app = {
 			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
 			app.addBandName();
-			app.callMusicGraph();
-			app.callLastFm();
+			//app.callMusicGraph();
+			//app.callLastFm();
+
 			app.googleMaps();
-			app.purchaseLinks();
+			//app.purchaseLinks();
 			console.log(app.formattedArtist);
 		});
 	},
@@ -189,30 +200,39 @@ var app = {
 
 	callJambase: function() {
 		$.ajax({
-			url: 'http://api.jambase.com/artists?name=' + app.artist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+			url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
 			method: 'GET'
 		}).done(function(response) {
 			var jambaseId = response.Artists[0].Id;
 			console.log(response, jambaseId);
 			$.ajax({
-				url: 'http://api.jambase.com/events?artistId=' + jambaseId + '&zipCode='+ app.testZip + '&radius=3000&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+				url: 'http://api.jambase.com/events?artistId=' + jambaseId + '&zipCode='+ app.testZip + '&radius=5000&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
 				method: 'GET'
 			}).done(function(response) {
 				console.log(response);
 				var eventArr = response.Events;
-				for(var i=0; i<eventArr.length; i++) {
-					var latitude = eventArr[i].Venue.Latitude;
-					var longitude = eventArr[i].Venue.Longitude;
-					console.log(latitude, longitude);
-					var latLng = new google.maps.LatLng(latitude, longitude);
-					console.log(latLng);
-					var marker = new google.maps.Marker({
-						map: map,
-						position: latLng
-					});
-				}
+					for(var i=0; i<eventArr.length; i++) {
+						var latitude = eventArr[i].Venue.Latitude;
+						var longitude = eventArr[i].Venue.Longitude;
+						console.log(latitude, longitude);
+						var myLatLng = new google.maps.LatLng(latitude, longitude);
+						console.log(myLatLng);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: myLatLng
+						});
+						app.logTours(eventArr[i]);
+					}
 			});
 		});
+	},
+
+	logTours: function(concert){
+		var location = $('h3').html(concert.Venue.Name);
+		var date = $('h4').html(concert.Date);
+		var city = $('h4').html(concert.Venue.City + ", " + concert.Venue.StateCode);
+		var ticketUrl = $('<a>').attr({href: concert.TicketUrl, target: "_blank"}).html("Buy tickets Here");
+		$('#tour-div').append(location).append(date).append(city).append(ticketUrl).append('<hr style="border-width:1px" />');
 	},
 
 	twitter: function() {
@@ -238,14 +258,7 @@ var app = {
     },
 
 	googleMaps: function() {
-		// var lat;
-		// var long;
-		// navigator.geolocation.getCurrentPosition(function(pos){
-		// 	var coords = pos.coords;
-		// 	lat = coords.latitude; 
-		// 	long = coords.longitude;
-		// 	console.log(lat, long);
-			// map options
+	
 			mapOption = {
 				zoom: 10,
 				center: new google.maps.LatLng(app.lat, app.long),
@@ -262,41 +275,14 @@ var app = {
 				content: "holding..."
 			});
 
-			//make new map centered on us
+			//create new map centered on geolocation
 			map = new google.maps.Map(document.getElementById("map"), mapOption);
 			
 			//console.log(map);
 			coordArr = app.address;
+			app.farmersMarket();
 			//app.callJambase();
 			//console.log(app.address[0]);
-		 
-		//function(err) {
-		// 	console.log(err.code) 
-		// });
-
-		
-		// // map options
-		// mapOption = {
-		// 	zoom: 10,
-		// 	center: new google.maps.LatLng(lat, long),
-		// 	panControl: false,
-		// 	zoomControl: true,
-		// 	zoomControlOptions: {
-		// 		style: google.maps.ZoomControlStyle.LARGE,
-		// 		position: google.maps.ControlPosition.RIGHT_CENTER
-		// 	},
-		// 	scaleControl: false
-		// }
-
-		// infoWindow = new google.maps.InfoWindow({
-		// 	content: "holding..."
-		// });
-
-		// //make new map centered on us
-		// map = new google.maps.Map(document.getElementById("map"), mapOption);
-		// //console.log(map);
-		// coordArr = app.address;
-		// //console.log(app.address[0]);
 	}, 
 
 	getGeoPosition: function() {
@@ -305,7 +291,12 @@ var app = {
 			app.lat = coords.latitude; 
 			app.long = coords.longitude;
 			console.log(app.lat, app.long);
-			app.googleMaps();
+			if(app.ontour === 1) {
+				app.googleMaps();
+			}else {
+				app.d3Function();
+			}
+			
 		}, function(err) {
 				console.log(err.code) 
 		});
@@ -318,40 +309,46 @@ var app = {
 
 	},
 
-	// farmersMarket: function() {
-	// 	zip = 94709;
-	// 	$.ajax({
-	// 		url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
-	// 		method: "GET"
-	// 	}).done(function(response){
-	// 		/*console.log(response);*/
-	// 		var marketArr = response.results;
-	// 		for(var i=0; i < marketArr.length; i++){
-	// 			var id = marketArr[i].id;
-	// 			$.ajax({
-	// 				url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
-	// 				method:"GET"
-	// 			}).done(function(response) {
-	// 				/*console.log(response);*/
-	// 				var googleLink = response.marketdetails.GoogleLink;
-	// 				/*console.log(googleLink);*/
-	// 				var latLng = decodeURIComponent(googleLink.substring(googleLink.indexOf("=")+1, googleLink.lastIndexOf("(")));
-	// 				/*console.log(latLng);*/
-	// 				//app.address.push(latLng);
-	// 				var split = latLng.split(',');
-	// 				var lat = split[0];
-	// 				var long = split[1];
-	// 				var mylatlng = new google.maps.LatLng(lat, long);
-	// 				/*console.log(mylatlng);*/
-	// 				var marker = new google.maps.Marker({
-	// 					map: map,
-	// 					position: mylatlng
-	// 				});
-	// 				//console.log(marker);
-	// 			});
-	// 		}
-	// 	});
-	// }	
+	farmersMarket: function() {
+		zip = app.testZip;
+		$.ajax({
+			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+			method: "GET"
+		}).done(function(response){
+			/*console.log(response);*/
+			var marketArr = response.results;
+			for(var i=0; i < marketArr.length; i++){
+				var id = marketArr[i].id;
+				$.ajax({
+					url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+					method:"GET"
+				}).done(function(response) {
+					/*console.log(response);*/
+					var googleLink = response.marketdetails.GoogleLink;
+					/*console.log(googleLink);*/
+					var latLng = decodeURIComponent(googleLink.substring(googleLink.indexOf("=")+1, googleLink.lastIndexOf("(")));
+					/*console.log(latLng);*/
+					//app.address.push(latLng);
+					var split = latLng.split(',');
+					var lat = split[0];
+					var long = split[1];
+					var mylatlng = new google.maps.LatLng(lat, long);
+					/*console.log(mylatlng);*/
+					var marker = new google.maps.Marker({
+						map: map,
+						position: mylatlng
+					});
+					//console.log(marker);
+				});
+			}
+		});
+	},	
+
+	d3Function: function() {
+		$('#map-title').html('Record Sales Chart');
+		$('#map').html('There are no upcoming tours instead have a look at some record sales data');
+		$('#tour-list-title').html('Record Sales List');
+	},
 
 	signIn: function(){
 		$('#sign-in').on('click', function(){
