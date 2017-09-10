@@ -42,6 +42,7 @@ var app = {
 	youtube: "",
     twitter: "",
     instagram: "",
+    facebook: "",
 	bio: "",
 	imageUrl: "",
 	address: [],
@@ -53,7 +54,6 @@ var app = {
 		app.addBandName();
 		app.callMusicGraph();
 		//app.purchaseLinks();
-        
         app.searchBand();
         //app.spotifyWidget();
         //app.youtubeLink();
@@ -62,6 +62,7 @@ var app = {
 		//app.googleMaps();
 		//app.twitter();
 		//app.instagram();
+		//app.facebook();
         //this.signIn();
         //this.register();
 	},
@@ -80,9 +81,9 @@ var app = {
 			var data = response.data[0];
 			musicGraphId = data.id;
 			app.spotify = data.spotify_id;
-			app.youTube = data.youtube_id;
+			app.youtube = data.youtube_id;
             app.artist = data.name;
-			console.log(data, app.spotify, app.youTube);
+			console.log(data, app.spotify, app.youtube);
 			// get bio info on the artist
 			$.ajax({
 				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
@@ -100,13 +101,16 @@ var app = {
                 method: "GET"
             }).done(function(response) {
                 var twitter_url = response.data.twitter_url[0];
-                console.log(twitter_url)
                 twitter_handle = twitter_url.split('/').pop();
                 var insta_url = response.data.instagram_url[0];
+                var fb_url = response.data.facebook_url;
+                console.log(twitter_url)
                 console.log(insta_url);
-                insta_handle = insta_url.split('/').pop();
+                console.log(fb_url);
+                //insta_handle = insta_url.split('/').pop();
                 app.twitter = twitter_handle;
-                app.instagram = insta_handle;
+                app.instagram = insta_url
+                app.facebook = fb_url;
                 console.log('twit: ', app.twitter, 'insta: ', app.instagram)
             });
 		});
@@ -264,7 +268,17 @@ var app = {
     },
 
     instagram: function() {
+        $('#instagram-link').on('click', function() {
+            event.preventDefault();
+            window.open(app.instagram);
+        });
+    },
 
+    facebook: function() {
+        $('#facebook-link').on('click', function() {
+            event.preventDefault();
+            window.open(app.facebook);
+        });
     },
 
 	googleMaps: function() {
@@ -364,7 +378,6 @@ var app = {
 				console.log(error.code);
 			})
 
-
 			firebase.auth().onAuthStateChanged(function(user) {
 			  if (user) {
 			    // User is signed in.
@@ -380,6 +393,7 @@ var app = {
 
 		});
 	},
+
 	register: function() {
 		console.log('Register function executed')
 
