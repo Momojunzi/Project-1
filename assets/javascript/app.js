@@ -31,8 +31,8 @@ window.twttr = (function(d, s, id) {
 
 
 var app = {
-	artist: "Glass+Animals",
-	formattedArtist: "",
+	artist: "Glass Animals",
+	formattedArtist: "Glass+Animals",
 	spotify: "",
 	youtube: "",
     twitter: "",
@@ -54,13 +54,15 @@ var app = {
 		app.farmersMarket();
         app.twitter();
         app.instagram();
+        this.signIn();
+		this.register();
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.artist,
+			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
@@ -101,7 +103,7 @@ var app = {
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
 			console.log(typeof(response.artist.image[3]['#text']));
@@ -114,21 +116,22 @@ var app = {
 		// click search button
 		$('#search-button').on('click', function(){
 			event.preventDefault();
-			console.log('hi');
             // clear current displays
             $('#social-display').html('');
             $('#listen-display').html('');
-            $('#search-input').val('');
+            //$('#search-input').val('');
 			// get value from search input
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
 			app.artist = searchedArtist;
+			console.log(app.artist);
 			// format artist name for query string
 			app.formattedArtist = searchedArtist.split(" ").join('+');
+			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
 			app.callMusicGraph();
 			app.callLastFm();
-			console.log(app.formattedArtist);
+			
 		});
 	},
 
@@ -219,20 +222,16 @@ var app = {
 		//make new map centered on us
 		map = new google.maps.Map(document.getElementById("map"), mapOption);
 		
-		console.log(map);
+		//console.log(map);
 		coordArr = app.address;
-		console.log(app.address[0]);
+		//console.log(app.address[0]);
 		
 	}, 
 
 	farmersMarket: function() {
 		zip = 94709;
 		$.ajax({
-<<<<<<< HEAD
 			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
-=======
-			url:  "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
->>>>>>> ff0054c63c3ed835f0d432b8cd0d01037b8402f7
 			method: "GET"
 		}).done(function(response){
 			/*console.log(response);*/
@@ -240,11 +239,7 @@ var app = {
 			for(var i=0; i < marketArr.length; i++){
 				var id = marketArr[i].id;
 				$.ajax({
-<<<<<<< HEAD
 					url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
-=======
-					url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
->>>>>>> ff0054c63c3ed835f0d432b8cd0d01037b8402f7
 					method:"GET"
 				}).done(function(response) {
 					/*console.log(response);*/
@@ -262,7 +257,7 @@ var app = {
 						map: map,
 						position: mylatlng
 					});
-					console.log(marker);
+					//console.log(marker);
 				});
 			}
 		});
@@ -351,11 +346,6 @@ var app = {
 		    $('#regModal').modal('hide');
 		});
 	},
-	startApp: function() {
-		this.signIn();
-		this.register();
-	}
-	
 };
 
 $("#login-modal").click(function(){
