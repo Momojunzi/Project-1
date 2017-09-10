@@ -50,21 +50,19 @@ var app = {
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		app.callLastFm();
-		//app.getGeoPosition();
 		app.addBandName();
 		app.callMusicGraph();
-		//app.purchaseLinks();
+		app.purchaseLinks();
         app.searchBand();
-        //app.spotifyWidget();
-        //app.youtubeLink();
-        //app.soundcloud();
-        //app.itunes();
-		//app.googleMaps();
-		//app.twitter();
-		//app.instagram();
-		//app.facebook();
-        //this.signIn();
-        //this.register();
+        app.spotifyWidget();
+        app.youtubeLink();
+        app.soundcloud();
+        app.itunes();
+		app.twitter();
+		app.instagram();
+		app.facebook();
+        this.signIn();
+        this.register();
 	},
 
 	addBandName: function(){
@@ -144,21 +142,10 @@ var app = {
 	searchBand: function() {
 		// click search button
 		$('#search-button').on('click', function(){
-
-			//test to see if google map changes its center and if zip changes markers
-			// var testLat = 39.1620;
-			// var testLong = -84.4569;
-			// app.lat = testLat;
-			// app.long = testLong;
-			// app.testZip = 45202;
-			// end test
-
 			event.preventDefault();
             // clear current displays
             $('#social-display').html('');
             $('#listen-display').html('');
-            //$('#search-input').val('');
-			// get value from search input
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
 			app.artist = searchedArtist;
@@ -235,18 +222,29 @@ var app = {
 							map: map,
 							position: myLatLng
 						});
-						app.logTours(eventArr[i]);
+						//app.logTours(eventArr[i]);
+						console.log(eventArr[i].Venue.Name, eventArr[i].Date, eventArr[i].Venue.City, eventArr[i].Venue.StateCode, eventArr[i].TicketUrl);
+						var location = $('<h3>').html(eventArr[i].Venue.Name);
+
+						var date = $('<h4>').html(eventArr[i].Date);
+						var city = $('<h4>').html(eventArr[i].Venue.City + ", " + eventArr[i].Venue.StateCode);
+						var ticketUrl = $('<a>').attr({href: eventArr[i].TicketUrl, target: "_blank"}).html("Buy tickets Here");
+						var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
+						$('#tour-div').append(concertDiv);
 					}
 			});
 		});
 	},
 
 	logTours: function(concert){
+		console.log(concert.Venue.Name, concert.Date, concert.Venue.City, concert.Venue.StateCode, concert.TicketUrl);
 		var location = $('h3').html(concert.Venue.Name);
+
 		var date = $('h4').html(concert.Date);
 		var city = $('h4').html(concert.Venue.City + ", " + concert.Venue.StateCode);
 		var ticketUrl = $('<a>').attr({href: concert.TicketUrl, target: "_blank"}).html("Buy tickets Here");
-		$('#tour-div').append(location).append(date).append(city).append(ticketUrl).append('<hr style="border-width:1px" />');
+		var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
+		$('#tour-div').append(concertDiv);
 	},
 
 	twitter: function() {
@@ -304,8 +302,8 @@ var app = {
 			
 			//console.log(map);
 			coordArr = app.address;
-			app.farmersMarket();
-			//app.callJambase();
+			//app.farmersMarket();
+			app.callJambase();
 			//console.log(app.address[0]);
 	}, 
 
@@ -365,6 +363,7 @@ var app = {
 	},	
 
 	d3Function: function() {
+		$("#tour-div").html("");
 		$('#map-title').html('Record Sales Chart');
 		$('#map').html('There are no upcoming tours instead have a look at some record sales data');
 		$('#tour-list-title').html('Record Sales List');
