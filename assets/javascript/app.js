@@ -58,26 +58,23 @@ var app = {
         app.youtubeLink();
         app.soundcloud();
         app.itunes();
-<<<<<<< HEAD
 		//app.googleMaps();
-		//app.farmersMarket();
+		//app.farmersMarket(); 
+		app.twitter();
+		app.instagram();
+        this.signIn();
+        this.register();
 	},
 
 	addBandName: function(){
 		$('#bandName').html(app.artist);
-=======
-		app.googleMaps();
-		app.farmersMarket();
-        app.twitter();
-        app.instagram();
->>>>>>> master
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.artist,
+			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
@@ -97,14 +94,6 @@ var app = {
 				console.log(app.bio);
 				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
 			});
-<<<<<<< HEAD
-			$.ajax({
-				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/metrics/twitter?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
-				method: "GET"
-			}).done(function(response) {
-				console.log(response);
-			})
-=======
             // getting twitter handle
             $.ajax({
                 url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
@@ -120,14 +109,13 @@ var app = {
                 app.instagram = insta_handle;
                 console.log('twit: ', app.twitter, 'insta: ', app.instagram)
             });
->>>>>>> master
 		});
 	},
 
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
 			console.log(typeof(response.artist.image[3]['#text']));
@@ -140,17 +128,18 @@ var app = {
 		// click search button
 		$('#search-button').on('click', function(){
 			event.preventDefault();
-			console.log('hi');
             // clear current displays
             $('#social-display').html('');
             $('#listen-display').html('');
-            $('#search-input').val('');
+            //$('#search-input').val('');
 			// get value from search input
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
 			app.artist = searchedArtist;
+			console.log(app.artist);
 			// format artist name for query string
 			app.formattedArtist = searchedArtist.split(" ").join('+');
+			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
 			app.addBandName();
 			app.callMusicGraph();
@@ -197,7 +186,7 @@ var app = {
             $('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
         });
 	},
-<<<<<<< HEAD
+
 	callJambase: function() {
 		$.ajax({
 			url: 'http://api.jambase.com/artists?name=' + app.artist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
@@ -223,17 +212,10 @@ var app = {
 					});
 				}
 			});
-=======
-
-	songKick: function() {
-		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/events.json?apikey='
->>>>>>> master
 		});
 	},
 
-
-    twitter: function() {
+	twitter: function() {
         $('#twitter-link').on('click', function() {
             event.preventDefault();
 
@@ -312,14 +294,11 @@ var app = {
 
 		// //make new map centered on us
 		// map = new google.maps.Map(document.getElementById("map"), mapOption);
-		
 		// //console.log(map);
 		// coordArr = app.address;
 		// //console.log(app.address[0]);
-		
 	}, 
 
-<<<<<<< HEAD
 	getGeoPosition: function() {
 		navigator.geolocation.getCurrentPosition(function(pos){
 			var coords = pos.coords;
@@ -337,7 +316,7 @@ var app = {
 		$('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
 		$('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
 
-	}
+	},
 
 	// farmersMarket: function() {
 	// 	zip = 94709;
@@ -373,49 +352,6 @@ var app = {
 	// 		}
 	// 	});
 	// }	
-=======
-	farmersMarket: function() {
-		zip = 94709;
-		$.ajax({
-<<<<<<< HEAD
-			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
-=======
-			url:  "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
->>>>>>> ff0054c63c3ed835f0d432b8cd0d01037b8402f7
-			method: "GET"
-		}).done(function(response){
-			/*console.log(response);*/
-			var marketArr = response.results;
-			for(var i=0; i < marketArr.length; i++){
-				var id = marketArr[i].id;
-				$.ajax({
-<<<<<<< HEAD
-					url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
-=======
-					url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
->>>>>>> ff0054c63c3ed835f0d432b8cd0d01037b8402f7
-					method:"GET"
-				}).done(function(response) {
-					/*console.log(response);*/
-					var googleLink = response.marketdetails.GoogleLink;
-					/*console.log(googleLink);*/
-					var latLng = decodeURIComponent(googleLink.substring(googleLink.indexOf("=")+1, googleLink.lastIndexOf("(")));
-					/*console.log(latLng);*/
-					//app.address.push(latLng);
-					var split = latLng.split(',');
-					var lat = split[0];
-					var long = split[1];
-					var mylatlng = new google.maps.LatLng(lat, long);
-					/*console.log(mylatlng);*/
-					var marker = new google.maps.Marker({
-						map: map,
-						position: mylatlng
-					});
-					console.log(marker);
-				});
-			}
-		});
-	},
 
 	signIn: function(){
 		$('#sign-in').on('click', function(){
@@ -500,12 +436,6 @@ var app = {
 		    $('#regModal').modal('hide');
 		});
 	},
-	startApp: function() {
-		this.signIn();
-		this.register();
-	}
-	
->>>>>>> master
 };
 
 $("#login-modal").click(function(){
