@@ -14,6 +14,9 @@
     <!-- link to jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
+    <!-- link to js for Bootstap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8mK3ra8f3ejL0AJflH-2PeEjj54JsUKI"></script>
@@ -21,7 +24,7 @@
 
   <!-- page -->
   <body>
-
+    
 	<!-- Nav bar section -->
     <section>
 
@@ -30,8 +33,55 @@
           <div class="navbar-header">
             <a class="navbar-brand">Muband</a>
           </div>
-           
-          <button type="button" class="btn btn-default navbar-btn navbar-right">Log in</button>
+          <button type="button" class="btn btn-default navbar-btn navbar-right" id="login-modal">Log in</button>
+          <!-- Login Modal Start -->
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" hidden>
+          <div class="modal-dialog">
+          <div class="loginmodal-container">
+            <h1>Login to Your Account</h1><br>
+            <form>
+             <input type="E-mail" name="user" id="sign-in-email"placeholder="E-mail ID">
+             <input type="password" name="pass" id ="sign-in-password" placeholder="Password">
+            <input type="submit" name="login" id="sign-in" class="login loginmodal-submit" value="Login">
+            </form>
+          
+          <div class="login-help">
+          <a id="register-modal">Register</a> - <a id="fPassword-modal">Forgot Password</a>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- Login Modal End -->
+      <!-- Register Modal -->
+            <div class="modal fade" id="regModal" tabindex="-1" data-dismiss="modal" role="dialog" aria-labelledby="regModalLabel" hidden>
+          <div class="modal-dialog">
+          <div class="register-container">
+            <h1>Register Your Account</h1><br>
+            <form>
+            <input type="text" id="sign-up-name" name="username" placeholder="Name">
+             <input type="E-mail" id ="sign-up-email"name="e-mail" placeholder="E-mail ID">
+             <input type="password" id="sign-up-password"name="pass" placeholder="Password">
+             <input type="text" id="zipcode" name="Zip" placeholder="Zipcode">
+            <input type="submit" name="Register" id= "register-user"class="reg regmodal-submit" value="Submit">
+            </form>
+          </div>
+          </div>
+          </div>
+<!-- Register Modal End-->
+        <!-- Forgot Password Modal -->
+            <div class="modal fade" id="passModal" tabindex="-1" role="dialog" aria-labelledby="fPasswordModalLabel" hidden>
+          <div class="modal-dialog">
+          <div class="forgotPassword-container">
+            <h1>Enter Your Account Details</h1><br>
+            <form>
+            <input type="text" name="username" placeholder="Name">       
+            <input type="E-mail" name="e-mail" placeholder="E-mail ID">
+            <input type="text" name="Zip" placeholder="Zipcode">
+            <input type="submit" name="Forgot Password" class="login loginmodal-submit" value="Submit">
+            </form>
+          </div>
+          </div>
+          </div>
 
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
@@ -54,7 +104,7 @@
         <div class="row">
 
         <!-- Band Details column-->
-          <div class="col-md-8">
+          <div class="col-md-9">
             
             <!-- name row -->
             <div class="row">
@@ -89,7 +139,7 @@
           </div>
 
           <!-- Listen & favorite column-->
-          <div class="col-md-4">
+          <div class="col-md-3">
 
             <!-- listen/purchase row -->
             <div class="row"> 
@@ -111,12 +161,11 @@
                     <button class="btn btn-default" id="soundcloud-link">SoundCloud</button>
                   </div>
                 </div>
+                <div class="row" id="listen-display"></div>
 
                 <div class="row" id="purchase-row">
                   <div class="col-md-4">
-                    <button class="btn btn-default" id="itunes-link">
-                      <!-- <a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-sm.svg) no-repeat;width:70px;height:15px;background-size:contain;"></a> -->
-                    iTunes</button>
+                    <button class="btn btn-default" id="itunes-link">iTunes</button>
 
                   </div>
 
@@ -166,19 +215,37 @@
             </div>
           </div>
 
-          <!-- Social Feed need to make sub rows -->
+          <!-- Social Feed -->
           <div class="col-md-4">
             <div> 
               <h2 class="in-container-hdr">Social</h2>
               <hr style="border-width:3px;">
             </div>
+            <div class="row">
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="twitter-link">Twitter</button>
+              </div>
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="instagram-link">Instagram</button>
+              </div>
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="facebook-link">Facebook</button>
+              </div>
+            </div>
+
+            <div class="row" id="social-display">
+            </div>
           </div>
 
-		<!-- close the second row -->
-		</div>
+    		<!-- close the second row -->
+    		</div>
 
       <!-- close the container -->
       </div>
+    </section>
 
     <script type="text/javascript" src="assets/javascript/app.js"></script>
 	

@@ -12,11 +12,31 @@ var database = firebase.database();
 //database test
 var map;
 
+//twitter widget code
+window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+        t._e.push(f);
+    };
+    return t;
+}(document, "script", "twitter-wjs"));
+
+
 var app = {
 	artist: "Glass+Animals",
 	formattedArtist: "",
 	spotify: "",
-	youtube: "", 
+	youtube: "",
+    twitter: "",
+    instagram: "",
 	bio: "",
 	imageUrl: "",
 	address: [],
@@ -32,6 +52,8 @@ var app = {
         app.itunes();
 		app.googleMaps();
 		app.farmersMarket();
+        app.twitter();
+        app.instagram();
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
@@ -57,14 +79,29 @@ var app = {
 				app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
 				console.log(app.bio);
 				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
-			})
+			});
+            // getting twitter handle
+            $.ajax({
+                url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+                method: "GET"
+            }).done(function(response) {
+                var twitter_url = response.data.twitter_url[0];
+                console.log(twitter_url)
+                twitter_handle = twitter_url.split('/').pop();
+                var insta_url = response.data.instagram_url[0];
+                console.log(insta_url);
+                insta_handle = insta_url.split('/').pop();
+                app.twitter = twitter_handle;
+                app.instagram = insta_handle;
+                console.log('twit: ', app.twitter, 'insta: ', app.instagram)
+            });
 		});
 	},
 
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
 			console.log(typeof(response.artist.image[3]['#text']));
@@ -78,6 +115,10 @@ var app = {
 		$('#search-button').on('click', function(){
 			event.preventDefault();
 			console.log('hi');
+            // clear current displays
+            $('#social-display').html('');
+            $('#listen-display').html('');
+            $('#search-input').val('');
 			// get value from search input
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
@@ -96,8 +137,8 @@ var app = {
             event.preventDefault();
             console.log(app.spotify);
             // re-align widget, override the default margin
-            $('#listen-row').attr('style','margin-left: 0px;');
-            $('#listen-row').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
+            $('#listen-display').attr('style','margin: 10px 0px 10px 0px; ');
+            $('#listen-display').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
         });
     },
 
@@ -105,7 +146,7 @@ var app = {
         $('#youtube-link').on('click', function() {
             event.preventDefault();
             console.log(app.youtube);
-            window.open('https://www.youtube.com/channel/' + app.youtube);
+            window.open('http://www.youtube.com/channel/' + app.youtube);
         });
     }, 
 
@@ -116,7 +157,7 @@ var app = {
             // does not always work. some artist's links are different from just their names
             // for example, soundcloud.com/glassanimals works fine but
             // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
-            window.open('https://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
+            window.open('http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
         });
     },
 
@@ -124,15 +165,38 @@ var app = {
         $('#itunes-link').on('click', function() {
             event.preventDefault();
             console.log('hi')
-            // $('#itunes-link').attr('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
+            $('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
         });
-		
 	},
+
 	songKick: function() {
 		$.ajax({
-			url: '//api.songkick.com/api/3.0/events.json?apikey='
-		})
+			url: 'http://api.songkick.com/api/3.0/events.json?apikey='
+		});
 	},
+
+
+    twitter: function() {
+        $('#twitter-link').on('click', function() {
+            event.preventDefault();
+
+            twttr.widgets.createTimeline({
+                sourceType: 'profile',
+                screenName: app.twitter
+            }, 
+
+            document.getElementById('social-display'),
+            
+            {   
+                width: '450',
+                height: '500',
+            });
+        });
+    },
+
+    instagram: function() {
+
+    },
 
 	googleMaps: function() {
 		// map options
@@ -164,7 +228,11 @@ var app = {
 	farmersMarket: function() {
 		zip = 94709;
 		$.ajax({
+<<<<<<< HEAD
 			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+=======
+			url:  "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+>>>>>>> ff0054c63c3ed835f0d432b8cd0d01037b8402f7
 			method: "GET"
 		}).done(function(response){
 			/*console.log(response);*/
@@ -172,7 +240,11 @@ var app = {
 			for(var i=0; i < marketArr.length; i++){
 				var id = marketArr[i].id;
 				$.ajax({
+<<<<<<< HEAD
 					url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+=======
+					url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+>>>>>>> ff0054c63c3ed835f0d432b8cd0d01037b8402f7
 					method:"GET"
 				}).done(function(response) {
 					/*console.log(response);*/
@@ -194,8 +266,117 @@ var app = {
 				});
 			}
 		});
-	}	
+	},
+
+	signIn: function(){
+		$('#sign-in').on('click', function(){
+			var email = $('#sign-in-email').val().trim();
+			var pass = $('#sign-in-password').val().trim();
+			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
+				console.log(error.code);
+			})
+
+
+			firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+			    // User is signed in.
+			    var displayName = user.displayName;
+			    var userEmail = user.email;
+			    console.log(userEmail);
+			    // ...
+			  } else {
+			    // User is signed out.
+			    // ...
+			  }
+			});
+
+		});
+	},
+	register: function() {
+		console.log('Register function executed')
+
+		$('#register-user').on('click', function (event) {
+			console.log('register-user clicked')
+
+			event.preventDefault();
+
+
+			var uname=$('#sign-up-name').val().trim();
+			console.log(uname);
+			var email = $('#sign-up-email').val().trim();
+			console.log(email);
+			var pass = $('#sign-up-password').val().trim();
+			var zip = $('#zipcode').val().trim();
+			
+
+			if (email.length < 4) {
+	      		alert('Please enter an email address.');
+	        	return;
+      		}
+      		if (pass.length < 4) {
+	       	 	alert('Please enter a password.');
+	        	return;
+      		}
+      		if ((zip.length < 5) || (zip.length > 5)) {
+	       	 	alert('Please enter a valid zipcode.');
+	        	return;
+      		}
+      		if (uname.length < 3) {
+	       	 	alert('Name should be of minimum 3 letters.');
+	        	return;
+      		}
+
+      		database.ref().push({
+
+    			email:email,
+    			password:pass,
+    			zip:zip,
+    			uname:uname
+    			//created:firebase.database.ServerValue.TIMESTAMP
+  			});
+
+	      	firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
+		        var errorCode = error.code;
+		        var errorMessage = error.message;
+		        if (errorCode === 'auth/weak-password') {
+		        	alert('The password is too weak.');
+		        } else if (errorCode === 'auth/invalid-email'){
+		        	alert('Invalid E-mail');
+		        } else {
+		        	alert(errorMessage);
+		        }
+		        console.log(error);
+		    });
+
+		    $('#regModal').modal('hide');
+		});
+	},
+	startApp: function() {
+		this.signIn();
+		this.register();
+	}
+	
 };
+
+$("#login-modal").click(function(){
+	$('#regModal').modal('hide');
+	$('#passModal').modal('hide');
+	$('#myModal').modal('show');
+});
+
+
+$("#register-modal").click(function(){
+	$('#myModal').modal('hide');
+	$('#passModal').modal('hide');
+	$('#regModal').modal('show');
+});
+
+$("#fPassword-modal").click(function(){
+	$('#myModal').modal('hide');
+	$('#regModal').modal('hide');
+	$('#passModal').modal('show');
+});
+
 
 
 $(document).ready(function(){
