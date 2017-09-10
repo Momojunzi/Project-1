@@ -146,6 +146,7 @@ var app = {
             // clear current displays
             $('#social-display').html('');
             $('#listen-display').html('');
+            $('#tour-div').html('');
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
 			app.artist = searchedArtist;
@@ -302,9 +303,9 @@ var app = {
 			
 			//console.log(map);
 			coordArr = app.address;
-			//app.farmersMarket();
-			app.callJambase();
-			//console.log(app.address[0]);
+			app.farmersMarket();
+			//app.callJambase();
+			
 	}, 
 
 	getGeoPosition: function() {
