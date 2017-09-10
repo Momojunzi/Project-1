@@ -108,8 +108,9 @@
             
             <!-- name row -->
             <div class="row">
+
               <div class="col-md-12 col-sm-12">
-                <h3 class="in-container-hdr">Band Name</h3>
+                <h3 class="in-container-hdr" id="bandName">Band Name</h3>
                 <hr style="border-width:3px;">
               </div>
 			       </div>
@@ -164,15 +165,24 @@
 
                 <div class="row" id="purchase-row">
                   <div class="col-md-4">
-                    <button class="btn btn-default" id="itunes-link">iTunes</button>
+                    <a id="itunes-purchase" href="#" target="_blank">
+                    	<button class="btn btn-default" id="itunes-link">iTunes</button>
+                    </a>
+                      <!-- <a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-sm.svg) no-repeat;width:70px;height:15px;background-size:contain;"></a> -->
+                 </div>
+
+                  <div class="col-md-4">
+                    <a id="google-purchase" href="#" target="_blank">
+                    	<button class="btn btn-default" id="googleplay-link">Google Play</button>
+					</a>
+                    
                   </div>
 
                   <div class="col-md-4">
-                    <button class="btn btn-default" id="googleplay-link">Google Play</button>
-                  </div>
-
-                  <div class="col-md-4">
-                    <button class="btn btn-default" id="amazonmusic-link">Amazon Music</button>
+                    <a id="amazon-purchase" href="#" target="_blank">
+						<button class="btn btn-default" id="amazonmusic-link"> Amazon Music</button>
+					</a>
+                   
                   </div>
                 </div>
 
@@ -202,7 +212,7 @@
 
               <div class="col-md-12">
                 <div> 
-                  <h3 class="in-container-hdr">Upcoming Tour Locations</h3>
+                  <h3 class="in-container-hdr" id="map-title">Upcoming Tour Locations</h3>
                   <hr style="border-width:3px;">
                   <div id="map"></div>
                 </div>
@@ -211,7 +221,8 @@
               <!-- Tour List -->
               <div class="col-md-12">
                 <div> 
-                  <h3 class="in-container-hdr">Upcoming Tour Dates</h3>
+                  <h3 class="in-container-hdr" id="tour-list-title">Upcoming Tour Dates</h3>
+                  <div id="tour-div"></div>
                   <hr style="border-width:3px;">
                 </div>
               </div>

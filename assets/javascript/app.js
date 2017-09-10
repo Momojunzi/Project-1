@@ -31,8 +31,13 @@ window.twttr = (function(d, s, id) {
 
 
 var app = {
+	geoposition: false,
+	testZip: 94709,
+	lat: "",
+	long: "",
 	artist: "Glass Animals",
 	formattedArtist: "Glass+Animals",
+	ontour: "",
 	spotify: "",
 	youtube: "",
     twitter: "",
@@ -44,20 +49,24 @@ var app = {
 	map: {},
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
+		app.callLastFm();
+		app.addBandName();
 		app.callMusicGraph();
-        app.callLastFm();
+		app.purchaseLinks();
         app.searchBand();
         app.spotifyWidget();
         app.youtubeLink();
         app.soundcloud();
         app.itunes();
-		app.googleMaps();
-		app.farmersMarket();
-        app.twitter();
-        app.instagram();
-        app.facebook();
+		app.twitter();
+		app.instagram();
+		app.facebook();
         this.signIn();
-		this.register();
+        this.register();
+	},
+
+	addBandName: function(){
+		$('#bandName').html(app.artist);
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
@@ -111,9 +120,22 @@ var app = {
 			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
+			console.log(response);
+			app.ontour = response.artist.ontour;
+			console.log(app.ontour);
 			console.log(typeof(response.artist.image[3]['#text']));
 			app.imageUrl = response.artist.image[3]['#text'];
 			$("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
+			if (app.ontour === "0"){
+				app.d3Function();
+			}
+			if(app.ontour === "1"){
+				if(app.geoposition === false) {
+					app.getGeoPosition();
+				}else{
+					app.googleMaps();
+				}
+			}
 		});
 	},
 
@@ -124,8 +146,7 @@ var app = {
             // clear current displays
             $('#social-display').html('');
             $('#listen-display').html('');
-            //$('#search-input').val('');
-			// get value from search input
+            $('#tour-div').html('');
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
 			app.artist = searchedArtist;
@@ -134,9 +155,11 @@ var app = {
 			app.formattedArtist = searchedArtist.split(" ").join('+');
 			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
+			app.addBandName();
 			app.callMusicGraph();
 			app.callLastFm();
-			
+			app.purchaseLinks();
+			console.log(app.formattedArtist);
 		});
 	},
 
@@ -177,13 +200,55 @@ var app = {
         });
 	},
 
-	songKick: function() {
+	callJambase: function() {
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/events.json?apikey='
+			url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+			method: 'GET'
+		}).done(function(response) {
+			var jambaseId = response.Artists[0].Id;
+			console.log(response, jambaseId);
+			$.ajax({
+				url: 'http://api.jambase.com/events?artistId=' + jambaseId + '&zipCode='+ app.testZip + '&radius=5000&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+				method: 'GET'
+			}).done(function(response) {
+				console.log(response);
+				var eventArr = response.Events;
+					for(var i=0; i<eventArr.length; i++) {
+						var latitude = eventArr[i].Venue.Latitude;
+						var longitude = eventArr[i].Venue.Longitude;
+						console.log(latitude, longitude);
+						var myLatLng = new google.maps.LatLng(latitude, longitude);
+						console.log(myLatLng);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: myLatLng
+						});
+						//app.logTours(eventArr[i]);
+						console.log(eventArr[i].Venue.Name, eventArr[i].Date, eventArr[i].Venue.City, eventArr[i].Venue.StateCode, eventArr[i].TicketUrl);
+						var location = $('<h3>').html(eventArr[i].Venue.Name);
+
+						var date = $('<h4>').html(eventArr[i].Date);
+						var city = $('<h4>').html(eventArr[i].Venue.City + ", " + eventArr[i].Venue.StateCode);
+						var ticketUrl = $('<a>').attr({href: eventArr[i].TicketUrl, target: "_blank"}).html("Buy tickets Here");
+						var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
+						$('#tour-div').append(concertDiv);
+					}
+			});
 		});
 	},
 
-    twitter: function() {
+	logTours: function(concert){
+		console.log(concert.Venue.Name, concert.Date, concert.Venue.City, concert.Venue.StateCode, concert.TicketUrl);
+		var location = $('h3').html(concert.Venue.Name);
+
+		var date = $('h4').html(concert.Date);
+		var city = $('h4').html(concert.Venue.City + ", " + concert.Venue.StateCode);
+		var ticketUrl = $('<a>').attr({href: concert.TicketUrl, target: "_blank"}).html("Buy tickets Here");
+		var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
+		$('#tour-div').append(concertDiv);
+	},
+
+	twitter: function() {
         $('#twitter-link').on('click', function() {
             event.preventDefault();
 
@@ -216,34 +281,55 @@ var app = {
     },
 
 	googleMaps: function() {
-		// map options
-		mapOption = {
-			zoom: 10,
-			center: new google.maps.LatLng(37.871853, -122.258423),
-			panControl: false,
-			zoomControl: true,
-			zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.LARGE,
-				position: google.maps.ControlPosition.RIGHT_CENTER
-			},
-			scaleControl: false
-		}
+	
+			mapOption = {
+				zoom: 10,
+				center: new google.maps.LatLng(app.lat, app.long),
+				panControl: false,
+				zoomControl: true,
+				zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.LARGE,
+					position: google.maps.ControlPosition.RIGHT_CENTER
+				},
+				scaleControl: false
+			}
 
-		infoWindow = new google.maps.InfoWindow({
-			content: "holding..."
-		});
+			infoWindow = new google.maps.InfoWindow({
+				content: "holding..."
+			});
 
-		//make new map centered on us
-		map = new google.maps.Map(document.getElementById("map"), mapOption);
-		
-		//console.log(map);
-		coordArr = app.address;
-		//console.log(app.address[0]);
-		
+			//create new map centered on geolocation
+			map = new google.maps.Map(document.getElementById("map"), mapOption);
+			
+			//console.log(map);
+			coordArr = app.address;
+			app.farmersMarket();
+			//app.callJambase();
+			
 	}, 
 
+	getGeoPosition: function() {
+		navigator.geolocation.getCurrentPosition(function(pos){
+			var coords = pos.coords;
+			app.lat = coords.latitude; 
+			app.long = coords.longitude;
+			console.log(app.lat, app.long);
+			app.geoposition = true;
+			app.googleMaps();
+		}, function(err) {
+				console.log(err.code) 
+		});
+	},
+
+	purchaseLinks: function(){
+		$('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
+		$('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
+		$('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
+
+	},
+
 	farmersMarket: function() {
-		zip = 94709;
+		zip = app.testZip;
 		$.ajax({
 			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
 			method: "GET"
@@ -275,6 +361,13 @@ var app = {
 				});
 			}
 		});
+	},	
+
+	d3Function: function() {
+		$("#tour-div").html("");
+		$('#map-title').html('Record Sales Chart');
+		$('#map').html('There are no upcoming tours instead have a look at some record sales data');
+		$('#tour-list-title').html('Record Sales List');
 	},
 
 	signIn: function(){
