@@ -31,6 +31,7 @@ window.twttr = (function(d, s, id) {
 
 
 var app = {
+	geoposition: false,
 	testZip: 94709,
 	lat: "",
 	long: "",
@@ -48,7 +49,7 @@ var app = {
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		app.callLastFm();
-		app.getGeoPosition();
+		//app.getGeoPosition();
 		app.addBandName();
 		app.callMusicGraph();
 		//app.purchaseLinks();
@@ -119,9 +120,20 @@ var app = {
 		}).done(function(response){
 			console.log(response);
 			app.ontour = response.artist.ontour;
+			console.log(app.ontour);
 			console.log(typeof(response.artist.image[3]['#text']));
 			app.imageUrl = response.artist.image[3]['#text'];
 			$("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
+			if (app.ontour === "0"){
+				app.d3Function();
+			}
+			if(app.ontour === "1"){
+				if(app.geoposition === false) {
+					app.getGeoPosition();
+				}else{
+					app.googleMaps();
+				}
+			}
 		});
 	},
 
@@ -152,11 +164,9 @@ var app = {
 			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
 			app.addBandName();
-			//app.callMusicGraph();
-			//app.callLastFm();
-
-			app.googleMaps();
-			//app.purchaseLinks();
+			app.callMusicGraph();
+			app.callLastFm();
+			app.purchaseLinks();
 			console.log(app.formattedArtist);
 		});
 	},
@@ -291,12 +301,8 @@ var app = {
 			app.lat = coords.latitude; 
 			app.long = coords.longitude;
 			console.log(app.lat, app.long);
-			if(app.ontour === 1) {
-				app.googleMaps();
-			}else {
-				app.d3Function();
-			}
-			
+			app.geoposition = true;
+			app.googleMaps();
 		}, function(err) {
 				console.log(err.code) 
 		});
