@@ -29,20 +29,22 @@
     <section>
 
       <nav class="navbar navbar-default">
-        <div class="container-fluid">
+        <div class="container-fluid data-header">
           <div class="navbar-header">
             <a class="navbar-brand">Muband</a>
           </div>
           <button type="button" class="btn btn-default navbar-btn navbar-right" id="login-modal">Log in</button>
+           <a id="userdisplayname">User Name</a>
+            <button type="button" class="btn btn-default navbar-btn navbar-right" id="logout-user">Logout</button>
           <!-- Login Modal Start -->
           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" hidden>
           <div class="modal-dialog">
           <div class="loginmodal-container">
             <h1>Login to Your Account</h1><br>
-            <form>
+            <form id="login-form">
              <input type="E-mail" name="user" id="sign-in-email"placeholder="E-mail ID">
              <input type="password" name="pass" id ="sign-in-password" placeholder="Password">
-            <input type="submit" name="login" id="sign-in" class="login loginmodal-submit" value="Login">
+            <input type="button" name="login" id="sign-in" class="login loginmodal-submit" value="Login">
             </form>
           
           <div class="login-help">
@@ -73,11 +75,11 @@
           <div class="modal-dialog">
           <div class="forgotPassword-container">
             <h1>Enter Your Account Details</h1><br>
-            <form>
-            <input type="text" name="username" placeholder="Name">       
-            <input type="E-mail" name="e-mail" placeholder="E-mail ID">
-            <input type="text" name="Zip" placeholder="Zipcode">
-            <input type="submit" name="Forgot Password" class="login loginmodal-submit" value="Submit">
+            <form id="fPassword-form">
+            <input type="text" name="username" id="fp-username" placeholder="Name">       
+            <input type="E-mail" name="e-mail" id="fp-email"placeholder="E-mail ID">
+            <input type="text" name="Zip" id="fp-zip" placeholder="Zipcode">
+            <input type="submit" name="ForgotPassword" class="login loginmodal-submit" id = "fpassuser" value="Submit">
             </form>
           </div>
           </div>
