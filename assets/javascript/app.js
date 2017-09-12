@@ -31,6 +31,7 @@ window.twttr = (function(d, s, id) {
 
 
 var app = {
+	signedIn: false,
 	geoposition: false,
 	testZip: 94709,
 	lat: "",
@@ -47,6 +48,7 @@ var app = {
 	imageUrl: "",
 	address: [],
 	map: {},
+	trackArr: [],
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
 		app.callLastFm();
@@ -61,12 +63,14 @@ var app = {
 		app.twitter();
 		app.instagram();
 		app.facebook();
+		app.favorites();
         this.signIn();
         this.register();
 	},
 
 	addBandName: function(){
 		$('#bandName').html(app.artist);
+		console.log(app.signedIn);
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
@@ -81,16 +85,16 @@ var app = {
 			app.spotify = data.spotify_id;
 			app.youtube = data.youtube_id;
             app.artist = data.name;
-			console.log(data, app.spotify, app.youtube);
+			//console.log(data, app.spotify, app.youtube);
 			// get bio info on the artist
 			$.ajax({
 				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
 				method: "GET"
 			}).done(function(response) {
-				console.log(response, response.data.artist_bio_short);
+				//console.log(response, response.data.artist_bio_short);
 				//get short bio and parse the markup returned
 				app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
-				console.log(app.bio);
+				//console.log(app.bio);
 				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
 			});
             // getting twitter handle
@@ -117,6 +121,15 @@ var app = {
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
+			url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+		}).done(function(response) {
+			app.trackArr = [];
+			for (var i=0; i<10; i++) {
+				app.trackArr.push(response.toptracks.track[i]);
+				console.log(app.trackArr);
+			}
+		});
+		$.ajax({
 			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
@@ -128,6 +141,7 @@ var app = {
 			$("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
 			if (app.ontour === "0"){
 				app.d3Function();
+
 			}
 			if(app.ontour === "1"){
 				if(app.geoposition === false) {
@@ -372,6 +386,7 @@ var app = {
 
 	signIn: function(){
 		$('#sign-in').on('click', function(){
+			event.preventDefault();
 			var email = $('#sign-in-email').val().trim();
 			var pass = $('#sign-in-password').val().trim();
 			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
@@ -383,11 +398,14 @@ var app = {
 			    // User is signed in.
 			    var displayName = user.displayName;
 			    var userEmail = user.email;
+			    app.signedIn = true;
+			    console.log(app.signedIn);
 			    console.log(userEmail);
 			    // ...
 			  } else {
 			    // User is signed out.
 			    // ...
+			    
 			  }
 			});
 
@@ -453,6 +471,19 @@ var app = {
 		    $('#regModal').modal('hide');
 		});
 	},
+
+	favorites: function() {
+		if(app.signedIn === true){
+			$('#addFavorites').css({color: '#42b3f4', display: 'inline-block'})
+				.on('click', function(){
+
+				})
+
+		}else{
+			$('#addFavorites').css({display: 'none'});
+		}
+
+	}
 };
 
 $("#login-modal").click(function(){
