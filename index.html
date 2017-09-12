@@ -118,14 +118,14 @@
             <!-- content row -->
             <div class="row">
               <!--Image column -->
-              <div class="col-md-4 col-sm-12">
+              <div class="col-lg-4 col-md-4 col-sm-12">
                 <div id="image-div"> 
                   <h3 class="in-container-hdr">artist image</h3> 
                 </div>
               </div>
 
               <!-- Content column-->
-              <div class="col-md-8 col-sm-12">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                 <div id="content-div"> 
                   <h3 class="in-container-hdr">artist bio</h3> 
               	</div>
@@ -138,7 +138,7 @@
           </div>
 
           <!-- Listen & favorite column-->
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12 col-xs-12">
 
             <!-- listen/purchase row -->
             <div class="row"> 
@@ -147,43 +147,49 @@
                 <h3 class="in-container-hdr">Listen and Buy Here</h3>
                 <hr style="border-width:3px;">
 
+              <div class="col-md-12">
                 <div class="row" id="listen-row">
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-2 col-xs-4">
                     <button class="btn btn-default" id="spotify-widget">Spotify</button>
                   </div>
 
-                  <div class="col-md-4">
-                    <button class="btn btn-default" id="youtube-link">Youtube</button>
+                  <div class="col-md-4 col-sm-2 col-xs-4">
+                    <a id="youtube-link" href="#" target="_blank">
+                      <button class="btn btn-default">Youtube</button>
+                    </a>
                   </div>
 
-                  <div class="col-md-4">
-                    <button class="btn btn-default" id="soundcloud-link">SoundCloud</button>
+                  <div class="col-md-4 col-sm-2 col-xs-4">
+                    <a id="soundcloud-link" href="#" target="_blank">
+                      <button class="btn btn-default">SoundCloud</button>
+                    </a>
                   </div>
                 </div>
+              
 
                 <div class="row" id="listen-display"></div>
 
                 <div class="row" id="purchase-row">
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-2 col-xs-4">
                     <a id="itunes-purchase" href="#" target="_blank">
-                    	<button class="btn btn-default" id="itunes-link">iTunes</button>
+                      <button class="btn btn-default" id="itunes-link">iTunes</button>
                     </a>
                       <!-- <a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-sm.svg) no-repeat;width:70px;height:15px;background-size:contain;"></a> -->
                  </div>
 
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-2 col-xs-4">
                     <a id="google-purchase" href="#" target="_blank">
                     	<button class="btn btn-default" id="googleplay-link">Google Play</button>
-					</a>
-                    
-                  </div>
+                    </a>
+                  </div>  
 
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-2 col-xs-4">
                     <a id="amazon-purchase" href="#" target="_blank">
-						<button class="btn btn-default" id="amazonmusic-link"> Amazon Music</button>
-					</a>
-                   
+						          <button class="btn btn-default" id="amazonmusic-link">Amazon Music</button>
+                    </a>
                   </div>
+                </div>
+                <!-- close purchase row -->
                 </div>
 
               </div>
@@ -207,7 +213,7 @@
         <div class="row">
           
           <!-- Map -->
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <div class="row">
 
               <div class="col-md-12">
@@ -230,23 +236,28 @@
           </div>
 
           <!-- Social Feed -->
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12 col-xs-12">
             <div> 
               <h3 class="in-container-hdr">Social</h3>
               <hr style="border-width:3px;">
             </div>
+
             <div class="row">
 
-              <div class="col-md-4">
+              <div class="col-md-4 col-sm-2 col-xs-4">
                 <button class="btn btn-default" id="twitter-link">Twitter</button>
               </div>
 
-              <div class="col-md-4">
-                <button class="btn btn-default" id="instagram-link">Instagram</button>
+              <div class="col-md-4 col-sm-2 col-xs-4">
+                <a id="instagram-link" href="#" target="_blank">
+                  <button class="btn btn-default">Instagram</button>
+                </a>
               </div>
 
-              <div class="col-md-4">
-                <button class="btn btn-default" id="facebook-link">Facebook</button>
+              <div class="col-md-4 col-sm-2 col-xs-4">
+                <a id="facebook-link" href="#" target="_blank">
+                  <button class="btn btn-default">Facebook</button>
+                </a>
               </div>
             </div>
 
