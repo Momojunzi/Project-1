@@ -65,12 +65,20 @@ var app = {
         app.instagram();
         app.facebook();
         app.addFavorites();
-        app.signIn();
-        app.register();
-    },
+        this.signIn();
+        this.register();
+	},
 
     addBandName: function(){
-        $('#bandName').html(app.artist);
+    	var splitArtist = app.artist.split(' ');
+    	for(var i=0; i<splitArtist.length; i++){
+    		var name = splitArtist[i].split('');
+    		name[0] = name[0].toUpperCase();
+    		splitArtist[i] = name.join('');
+    	}
+    	var capitolArtist = splitArtist.join(' ');
+    	console.log(capitolArtist);
+        $('#bandName').html(capitolArtist);
         console.log(app.signedIn);
     },
     // ajax call to api for band summmary information
@@ -161,21 +169,21 @@ var app = {
             $('#social-display').html('');
             $('#listen-display').html('');
             $('#tour-div').html('');
-            var searchedArtist = $('#search-input').val().trim();
-            console.log(searchedArtist);
-            app.artist = searchedArtist;
-            console.log(app.artist);
-            // format artist name for query string
-            app.formattedArtist = searchedArtist.split(" ").join('+');
-            console.log(app.formattedArtist);
-            // recall music graph and last fm to grab artist info
-            app.addBandName();
-            app.callMusicGraph();
-            app.callLastFm();
-            app.purchaseLinks();
-            console.log(app.formattedArtist);
-        });
-    },
+			var searchedArtist = $('#search-input').val().trim();
+			console.log(searchedArtist);
+			app.artist = searchedArtist;
+			console.log(app.artist);
+			// format artist name for query string
+			app.formattedArtist = searchedArtist.split(" ").join('+');
+			console.log(app.formattedArtist);
+			// recall music graph and last fm to grab artist info
+			app.addBandName();
+			app.callMusicGraph();
+			app.callLastFm();
+			app.purchaseLinks();
+			console.log(app.formattedArtist);
+		});
+	},
 
     spotifyWidget: function() {
         $('#spotify-widget').on('click', function() {
@@ -293,8 +301,7 @@ var app = {
         });
     },
 
-    googleMaps: function() {
-    
+	 googleMaps: function() {
             mapOption = {
                 zoom: 10,
                 center: new google.maps.LatLng(app.lat, app.long),
@@ -423,27 +430,26 @@ var app = {
                 // [END_EXCLUDE]
             });
 
-            console.log('success');
-            $('#myModal').modal('hide');
-            $('#logout-user').css('display', 'block');
-            $('#login-modal').css('display', 'none');
-            console.log('trying...')
-    
             firebase.auth().onAuthStateChanged(function(user) {
-                  if (user) {
+                if (user) {
+                  	console.log('success');
+            		$('#myModal').modal('hide');
+            		$('#logout-user').css('display', 'block');
+            		$('#login-modal').css('display', 'none');
+            		
                     // User is signed in.
                     app.userId = user.uid;
-                      app.signedIn = true;
-                      if(app.signedIn === true){
+                    app.signedIn = true;
+                    if(app.signedIn === true){
                           app.addFavorites();
-                      }
-                      console.log(app.signedIn);
-                  } else {
-                    // User is signed out.
-                  }
+                    }
+                	console.log(app.signedIn);
+	            } else {
+	                    // User is signed out
+	            }
             });
                 $('#regModal').modal('hide');
-            });
+            }); 
     },
 
     register: function() {
@@ -463,6 +469,21 @@ var app = {
                 var favorites = [];
             });
 
+            firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // [START_EXCLUDE]
+                if (errorCode === 'auth/wrong-password') {
+                    alert('Wrong password.');
+                } else {
+                    alert(errorMessage);
+                }
+                console.log(error);
+                $('#sign-in').disabled = false;
+                // [END_EXCLUDE]
+            });
+
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
                     // User is signed in.
@@ -479,9 +500,7 @@ var app = {
                     });
                     console.log(userId);
                     // ...
-                } else {
-                    // User is signed out.
-                }
+                } 
             });
             $('#regModal').modal('hide');
         });
