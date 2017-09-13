@@ -12,64 +12,130 @@ var database = firebase.database();
 //database test
 var map;
 
+//twitter widget code
+window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+        t._e.push(f);
+    };
+    return t;
+}(document, "script", "twitter-wjs"));
+
+
 var app = {
-	artist: "Glass+Animals",
-	formattedArtist: "",
+	geoposition: false,
+	testZip: 94709,
+	lat: "",
+	long: "",
+	artist: "Glass Animals",
+	formattedArtist: "Glass+Animals",
+	ontour: "",
 	spotify: "",
-	youtube: "", 
+	youtube: "",
+    twitter: "",
+    instagram: "",
+    facebook: "",
 	bio: "",
 	imageUrl: "",
 	address: [],
 	map: {},
 	//call functions that need to be called when the page loads in the start app method
 	startApp: function(){
-		this.callMusicGraph();
-        this.callLastFm();
-        this.searchBand();
-        this.spotifyWidget();
-        this.youtubeLink();
-        this.soundcloud();
-        this.itunes();
-		this.googleMaps();
-		this.farmersMarket();
+		app.callLastFm();
+		app.addBandName();
+		app.callMusicGraph();
+		app.purchaseLinks();
+        app.searchBand();
+        app.spotifyWidget();
+        app.youtubeLink();
+        app.soundcloud();
+        app.itunes();
+		app.twitter();
+		app.instagram();
+		app.facebook();
+        this.signIn();
+        this.register();
+	},
+
+	addBandName: function(){
+		$('#bandName').html(app.artist);
 	},
 	// ajax call to api for band summmary information
 	callMusicGraph: function(){
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "https://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + this.artist,
+			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
 			musicGraphId = data.id;
-			this.spotify = data.spotify_id;
-			this.youTube = data.youtube_id;
-            this.artist = data.name;
-			console.log(data, this.spotify, this.youTube);
+			app.spotify = data.spotify_id;
+			app.youtube = data.youtube_id;
+            app.artist = data.name;
+			console.log(data, app.spotify, app.youtube);
 			// get bio info on the artist
 			$.ajax({
-				url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
 				method: "GET"
 			}).done(function(response) {
 				console.log(response, response.data.artist_bio_short);
 				//get short bio and parse the markup returned
-				this.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
-				console.log(this.bio);
-				$('#content-div').html('<h4>' + this.bio + '<h4>');//remove and put in a different function that draws to the page
-			})
+				app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
+				console.log(app.bio);
+				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
+			});
+            // getting twitter handle
+            $.ajax({
+                url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+                method: "GET"
+            }).done(function(response) {
+                var twitter_url = response.data.twitter_url[0];
+                twitter_handle = twitter_url.split('/').pop();
+                var insta_url = response.data.instagram_url[0];
+                var fb_url = response.data.facebook_url;
+                console.log(twitter_url)
+                console.log(insta_url);
+                console.log(fb_url);
+                //insta_handle = insta_url.split('/').pop();
+                app.twitter = twitter_handle;
+                app.instagram = insta_url
+                app.facebook = fb_url;
+                console.log('twit: ', app.twitter, 'insta: ', app.instagram)
+            });
 		});
 	},
 
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + this.artist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
+			console.log(response);
+			app.ontour = response.artist.ontour;
+			console.log(app.ontour);
 			console.log(typeof(response.artist.image[3]['#text']));
-			this.imageUrl = response.artist.image[3]['#text'];
-			$("#image-div").html('<img class="img-responsive" src=' + this.imageUrl + '>');
+			app.imageUrl = response.artist.image[3]['#text'];
+			$("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
+			if (app.ontour === "0"){
+				app.d3Function();
+			}
+			if(app.ontour === "1"){
+				if(app.geoposition === false) {
+					app.getGeoPosition();
+				}else{
+					app.googleMaps();
+				}
+			}
 		});
 	},
 
@@ -77,16 +143,22 @@ var app = {
 		// click search button
 		$('#search-button').on('click', function(){
 			event.preventDefault();
-			console.log('hi');
-			// get value from search input
+            // clear current displays
+            $('#social-display').html('');
+            $('#listen-display').html('');
+            $('#tour-div').html('');
 			var searchedArtist = $('#search-input').val().trim();
 			console.log(searchedArtist);
 			app.artist = searchedArtist;
+			console.log(app.artist);
 			// format artist name for query string
 			app.formattedArtist = searchedArtist.split(" ").join('+');
+			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
+			app.addBandName();
 			app.callMusicGraph();
 			app.callLastFm();
+			app.purchaseLinks();
 			console.log(app.formattedArtist);
 		});
 	},
@@ -96,8 +168,8 @@ var app = {
             event.preventDefault();
             console.log(app.spotify);
             // re-align widget, override the default margin
-            $('#listen-row').attr('style','margin-left: 0px;');
-            $('#listen-row').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
+            $('#listen-display').attr('style','margin: 10px 0px 10px 0px; ');
+            $('#listen-display').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
         });
     },
 
@@ -105,7 +177,7 @@ var app = {
         $('#youtube-link').on('click', function() {
             event.preventDefault();
             console.log(app.youtube);
-            window.open('https://www.youtube.com/channel/' + app.youtube);
+            window.open('http://www.youtube.com/channel/' + app.youtube);
         });
     }, 
 
@@ -116,7 +188,7 @@ var app = {
             // does not always work. some artist's links are different from just their names
             // for example, soundcloud.com/glassanimals works fine but
             // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
-            window.open('https://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
+            window.open('http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
         });
     },
 
@@ -124,47 +196,142 @@ var app = {
         $('#itunes-link').on('click', function() {
             event.preventDefault();
             console.log('hi')
-            // $('#itunes-link').attr('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
+            $('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
         });
-		
 	},
-	songKick: function() {
+
+	callJambase: function() {
 		$.ajax({
-			url: '//api.songkick.com/api/3.0/events.json?apikey='
-		})
+			url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+			method: 'GET'
+		}).done(function(response) {
+			var jambaseId = response.Artists[0].Id;
+			console.log(response, jambaseId);
+			$.ajax({
+				url: 'http://api.jambase.com/events?artistId=' + jambaseId + '&zipCode='+ app.testZip + '&radius=5000&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
+				method: 'GET'
+			}).done(function(response) {
+				console.log(response);
+				var eventArr = response.Events;
+					for(var i=0; i<eventArr.length; i++) {
+						var latitude = eventArr[i].Venue.Latitude;
+						var longitude = eventArr[i].Venue.Longitude;
+						console.log(latitude, longitude);
+						var myLatLng = new google.maps.LatLng(latitude, longitude);
+						console.log(myLatLng);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: myLatLng
+						});
+						//app.logTours(eventArr[i]);
+						console.log(eventArr[i].Venue.Name, eventArr[i].Date, eventArr[i].Venue.City, eventArr[i].Venue.StateCode, eventArr[i].TicketUrl);
+						var location = $('<h3>').html(eventArr[i].Venue.Name);
+
+						var date = $('<h4>').html(eventArr[i].Date);
+						var city = $('<h4>').html(eventArr[i].Venue.City + ", " + eventArr[i].Venue.StateCode);
+						var ticketUrl = $('<a>').attr({href: eventArr[i].TicketUrl, target: "_blank"}).html("Buy tickets Here");
+						var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
+						$('#tour-div').append(concertDiv);
+					}
+			});
+		});
 	},
+
+	logTours: function(concert){
+		console.log(concert.Venue.Name, concert.Date, concert.Venue.City, concert.Venue.StateCode, concert.TicketUrl);
+		var location = $('h3').html(concert.Venue.Name);
+
+		var date = $('h4').html(concert.Date);
+		var city = $('h4').html(concert.Venue.City + ", " + concert.Venue.StateCode);
+		var ticketUrl = $('<a>').attr({href: concert.TicketUrl, target: "_blank"}).html("Buy tickets Here");
+		var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
+		$('#tour-div').append(concertDiv);
+	},
+
+	twitter: function() {
+        $('#twitter-link').on('click', function() {
+            event.preventDefault();
+
+            twttr.widgets.createTimeline({
+                sourceType: 'profile',
+                screenName: app.twitter
+            }, 
+
+            document.getElementById('social-display'),
+            
+            {   
+                width: '450',
+                height: '500',
+            });
+        });
+    },
+
+    instagram: function() {
+        $('#instagram-link').on('click', function() {
+            event.preventDefault();
+            window.open(app.instagram);
+        });
+    },
+
+    facebook: function() {
+        $('#facebook-link').on('click', function() {
+            event.preventDefault();
+            window.open(app.facebook);
+        });
+    },
 
 	googleMaps: function() {
-		// map options
-		mapOption = {
-			zoom: 10,
-			center: new google.maps.LatLng(37.871853, -122.258423),
-			panControl: false,
-			zoomControl: true,
-			zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.LARGE,
-				position: google.maps.ControlPosition.RIGHT_CENTER
-			},
-			scaleControl: false
-		}
+	
+			mapOption = {
+				zoom: 10,
+				center: new google.maps.LatLng(app.lat, app.long),
+				panControl: false,
+				zoomControl: true,
+				zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.LARGE,
+					position: google.maps.ControlPosition.RIGHT_CENTER
+				},
+				scaleControl: false
+			}
 
-		infoWindow = new google.maps.InfoWindow({
-			content: "holding..."
-		});
+			infoWindow = new google.maps.InfoWindow({
+				content: "holding..."
+			});
 
-		//make new map centered on us
-		map = new google.maps.Map(document.getElementById("map"), mapOption);
-		
-		console.log(map);
-		coordArr = app.address;
-		console.log(app.address[0]);
-		
+			//create new map centered on geolocation
+			map = new google.maps.Map(document.getElementById("map"), mapOption);
+			
+			//console.log(map);
+			coordArr = app.address;
+			app.farmersMarket();
+			//app.callJambase();
+			
 	}, 
 
+	getGeoPosition: function() {
+		navigator.geolocation.getCurrentPosition(function(pos){
+			var coords = pos.coords;
+			app.lat = coords.latitude; 
+			app.long = coords.longitude;
+			console.log(app.lat, app.long);
+			app.geoposition = true;
+			app.googleMaps();
+		}, function(err) {
+				console.log(err.code) 
+		});
+	},
+
+	purchaseLinks: function(){
+		$('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
+		$('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
+		$('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
+
+	},
+
 	farmersMarket: function() {
-		zip = 94709;
+		zip = app.testZip;
 		$.ajax({
-			url:  "//search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+			url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
 			method: "GET"
 		}).done(function(response){
 			/*console.log(response);*/
@@ -172,7 +339,7 @@ var app = {
 			for(var i=0; i < marketArr.length; i++){
 				var id = marketArr[i].id;
 				$.ajax({
-					url: "//search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+					url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
 					method:"GET"
 				}).done(function(response) {
 					/*console.log(response);*/
@@ -190,14 +357,22 @@ var app = {
 						map: map,
 						position: mylatlng
 					});
-					console.log(marker);
+					//console.log(marker);
 				});
 			}
 		});
+	},	
+
+	d3Function: function() {
+		$("#tour-div").html("");
+		$('#map-title').html('Record Sales Chart');
+		$('#map').html('There are no upcoming tours instead have a look at some record sales data');
+		$('#tour-list-title').html('Record Sales List');
 	},
 	    
 	signIn: function(){
 		$('#sign-in').on('click', function(){
+
 			if (firebase.auth().currentUser) {
         // [START signout]
         firebase.auth().signOut();
@@ -240,7 +415,30 @@ var app = {
       }
       
 	});
+
+			var email = $('#sign-in-email').val().trim();
+			var pass = $('#sign-in-password').val().trim();
+			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
+				console.log(error.code);
+			})
+
+			firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+			    // User is signed in.
+			    var displayName = user.displayName;
+			    var userEmail = user.email;
+			    console.log(userEmail);
+			    // ...
+			  } else {
+			    // User is signed out.
+			    // ...
+			  }
+			});
+
+		});
+
 	},
+
 	register: function() {
 		console.log('Register function executed')
 
@@ -306,6 +504,7 @@ var app = {
 });
 	},
 
+
 	forgotPassword: function() {
 		$('#fpassuser').on('click', function () {
 			event.preventDefault();
@@ -338,6 +537,7 @@ var app = {
 		this.register();
 	}
 	
+
 };
 
 $("#login-modal").click(function(){

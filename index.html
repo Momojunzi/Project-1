@@ -34,6 +34,7 @@
             <a class="navbar-brand">Muband</a>
           </div>
           <button type="button" class="btn btn-default navbar-btn navbar-right" id="login-modal">Log in</button>
+
            <a id="userdisplayname">User Name</a>
             <button type="button" class="btn btn-default navbar-btn navbar-right" id="logout-user">Logout</button>
           <!-- Login Modal Start -->
@@ -81,17 +82,64 @@
             <input type="text" name="Zip" id="fp-zip" placeholder="Zipcode">
             <input type="submit" name="ForgotPassword" class="login loginmodal-submit" id = "fpassuser" value="Submit">
             </form>
+
+
+          <!-- Login Modal Start -->
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" hidden>
+            <div class="modal-dialog">
+              <div class="loginmodal-container">
+                <h1>Login to Your Account</h1>
+                <br>
+                <form>
+                  <input type="Email" name="user" id="sign-in-email" placeholder="Email address">
+                  <input type="password" name="pass" id ="sign-in-password" placeholder="Password">
+                  <input type="submit" name="login" id="sign-in" class="login loginmodal-submit" value="Login">
+                </form>
+          
+                <div class="login-help">
+                  <a id="register-modal">Register</a> - <a id="fPassword-modal">Forgot Password</a>
+                </div>
+              </div>
+            </div>
+
           </div>
+          <!-- Login Modal End -->
+          <!-- Register Modal -->
+          <div class="modal fade" id="regModal" tabindex="-1" data-dismiss="modal" role="dialog" aria-labelledby="regModalLabel" hidden>
+            <div class="modal-dialog">
+              <div class="register-container">
+                <h1>Register Your Account</h1><br>
+                <form>
+                  <input type="text" id="sign-up-name" name="username" placeholder="Name">
+                  <input type="E-mail" id ="sign-up-email"name="e-mail" placeholder="E-mail ID">
+                  <input type="password" id="sign-up-password"name="pass" placeholder="Password">
+                  <input type="text" id="zipcode" name="Zip" placeholder="Zipcode">
+                  <input type="submit" name="Register" id= "register-user"class="reg regmodal-submit" value="Submit">
+                </form>
+              </div>
+            </div>
           </div>
+          <!-- Register Modal End-->
+          <!-- Forgot Password Modal -->
+          <div class="modal fade" id="passModal" tabindex="-1" role="dialog" aria-labelledby="fPasswordModalLabel" hidden>
+            <div class="modal-dialog">
+              <div class="forgotPassword-container">
+                <h1>Enter Your Account Details</h1><br>
+                <form>
+                  <input type="text" name="username" placeholder="Name">       
+                  <input type="E-mail" name="e-mail" placeholder="E-mail ID">
+                  <input type="text" name="Zip" placeholder="Zipcode">
+                  <input type="submit" name="Forgot Password" class="login loginmodal-submit" value="Submit">
+                </form>
+              </div>
+            </div>
           </div>
 
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
-
               <input id="search-input" type="text" class="form-control" placeholder="Search">
             </div>
             <button id="search-button" type="submit" class="btn btn-default">Submit</button>
-
           </form>
 
         </div>
@@ -106,12 +154,13 @@
         <div class="row">
 
         <!-- Band Details column-->
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             
             <!-- name row -->
             <div class="row">
-              <div class="col-md-12">
-                <h2 class="in-container-hdr">Band Name</h2>
+
+              <div class="col-md-12 col-sm-12">
+                <h3 class="in-container-hdr" id="bandName">Band Name</h3>
                 <hr style="border-width:3px;">
               </div>
 			       </div>
@@ -119,19 +168,17 @@
             <!-- content row -->
             <div class="row">
               <!--Image column -->
-              <div class="col-md-4">
-                <div> 
-                  <h2 class="in-container-hdr">Image</h2> 
+              <div class="col-md-4 col-sm-12">
+                <div id="image-div"> 
+                  <h3 class="in-container-hdr">artist image</h3> 
                 </div>
-                <div id="image-div"></div>
               </div>
 
               <!-- Content column-->
-              <div class="col-md-8">
-                <div> 
-                  <h2 class="in-container-hdr">Content</h2> 
+              <div class="col-md-8 col-sm-12">
+                <div id="content-div"> 
+                  <h3 class="in-container-hdr">artist bio</h3> 
               	</div>
-                <div id="content-div"></div>
               </div>
 
             <!-- close content row -->
@@ -147,7 +194,7 @@
             <div class="row"> 
 
               <div>
-                <h2 class="in-container-hdr">Play/Purchase</h2>
+                <h3 class="in-container-hdr">Listen and Buy Here</h3>
                 <hr style="border-width:3px;">
 
                 <div class="row" id="listen-row">
@@ -164,20 +211,28 @@
                   </div>
                 </div>
 
+                <div class="row" id="listen-display"></div>
+
                 <div class="row" id="purchase-row">
                   <div class="col-md-4">
-                    <button class="btn btn-default" id="itunes-link">
+                    <a id="itunes-purchase" href="#" target="_blank">
+                    	<button class="btn btn-default" id="itunes-link">iTunes</button>
+                    </a>
                       <!-- <a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-sm.svg) no-repeat;width:70px;height:15px;background-size:contain;"></a> -->
-                    iTunes</button>
+                 </div>
 
+                  <div class="col-md-4">
+                    <a id="google-purchase" href="#" target="_blank">
+                    	<button class="btn btn-default" id="googleplay-link">Google Play</button>
+					</a>
+                    
                   </div>
 
                   <div class="col-md-4">
-                    <button class="btn btn-default" id="googleplay-link">Google Play</button>
-                  </div>
-
-                  <div class="col-md-4">
-                    <button class="btn btn-default" id="amazonmusic-link">Amazon Music</button>
+                    <a id="amazon-purchase" href="#" target="_blank">
+						<button class="btn btn-default" id="amazonmusic-link"> Amazon Music</button>
+					</a>
+                   
                   </div>
                 </div>
 
@@ -187,7 +242,7 @@
             <!-- Favorites row -->
             <div class="row">
               <div>
-                <h2 class="in-container-hdr">Favorites</h2>
+                <h3 class="in-container-hdr">Favorites</h3>
                 <hr style="border-width:3px;">
               </div>
             </div>
@@ -202,35 +257,65 @@
         <div class="row">
           
           <!-- Map -->
-          <div class="col-md-4">
-            <div> 
-              <h2 class="in-container-hdr">Tour Map</h2>
-              <hr style="border-width:3px;">
-              <div id="map"></div>
+          <div class="col-md-8">
+            <div class="row">
+
+              <div class="col-md-12">
+                <div> 
+                  <h3 class="in-container-hdr" id="map-title">Upcoming Tour Locations</h3>
+                  <hr style="border-width:3px;">
+                  <div id="map"></div>
+                </div>
+              </div>
+
+              <!-- Tour List -->
+              <div class="col-md-12">
+                <div> 
+                  <h3 class="in-container-hdr" id="tour-list-title">Upcoming Tour Dates</h3>
+                  <div id="tour-div"></div>
+                  <hr style="border-width:3px;">
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Tour List -->
+          <!-- Social Feed -->
           <div class="col-md-4">
             <div> 
-              <h2 class="in-container-hdr" > Tour List </h2>
+              <h3 class="in-container-hdr">Social</h3>
               <hr style="border-width:3px;">
+            </div>
+            <div class="row">
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="twitter-link">Twitter</button>
+              </div>
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="instagram-link">Instagram</button>
+              </div>
+
+              <div class="col-md-4">
+                <button class="btn btn-default" id="facebook-link">Facebook</button>
+              </div>
+            </div>
+
+            <div class="row" id="social-display">
             </div>
           </div>
 
-          <!-- Social Feed need to make sub rows -->
-          <div class="col-md-4">
-            <div> 
-              <h2 class="in-container-hdr">Social</h2>
-              <hr style="border-width:3px;">
-            </div>
-          </div>
-
-		<!-- close the second row -->
-		</div>
+    		<!-- close the second row -->
+    		</div>
 
       <!-- close the container -->
       </div>
+    </section>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom" id="footer">
+      <div class="container">
+        2017
+      </div>
+    </nav>
 
     <script type="text/javascript" src="assets/javascript/app.js"></script>
 	
