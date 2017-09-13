@@ -65,8 +65,8 @@ var app = {
         app.instagram();
         app.facebook();
         app.addFavorites();
-        this.signIn();
-        this.register();
+        app.signIn();
+        app.register();
     },
 
     addBandName: function(){
@@ -273,8 +273,7 @@ var app = {
 
             document.getElementById('social-display'),
             
-            {   
-                width: '450',
+            {   width: '450',
                 height: '500'
             });
         });
@@ -322,18 +321,18 @@ var app = {
             
     }, 
 
-    getGeoPosition: function() {
-        navigator.geolocation.getCurrentPosition(function(pos){
-            var coords = pos.coords;
-            app.lat = coords.latitude; 
-            app.long = coords.longitude;
-            console.log(app.lat, app.long);
-            app.geoposition = true;
-            app.googleMaps();
-        }, function(err) {
-                console.log(err.code) 
-        });
-    },
+    // getGeoPosition: function() {
+    //     navigator.geolocation.getCurrentPosition(function(pos){
+    //         var coords = pos.coords;
+    //         app.lat = coords.latitude; 
+    //         app.long = coords.longitude;
+    //         console.log(app.lat, app.long);
+    //         app.geoposition = true;
+    //         app.googleMaps();
+    //     }, function(err) {
+    //             console.log(err.code) 
+    //     });
+    // },
 
     purchaseLinks: function(){
         $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");

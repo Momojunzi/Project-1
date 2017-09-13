@@ -1,7 +1,12 @@
+* { 
+	box-sizing: border-box 
+}
+
 body {
 	padding-bottom: 70px;
 /*	background-color: #290629;
 	color: #ffffff;*/
+	font-family: 'Noto Sans', sans-serif;
 }
 
 html {
@@ -33,6 +38,17 @@ html {
 	position: absolute;
 	bottom: 0;
 	text-align: center;
+}
+
+.modal-dialog {
+	background-color: orange;
+	width: 500px;
+	
+}
+
+.form {
+	background-color: blue;
+	display: block;
 }
 
 /*.row {
