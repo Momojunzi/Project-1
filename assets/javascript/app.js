@@ -427,71 +427,69 @@ var app = {
 	signIn: function(){
 
 		$('#sign-in').on('click', function(){
-      event.preventDefault();
+			event.preventDefault();
 			if (firebase.auth().currentUser) {
-        // [START signout]
-        firebase.auth().signOut();
-         $('#login-modal').modal('hide');
-    	$('#logout-user').css('display', 'none');
-        // [END signout]
-      } else {       
-        var email = $('#sign-in-email').val().trim();
-        var password = $('#sign-in-password').val().trim();
-        if (email.length < 4) {
-          alert('Please enter an email address.');
-          return;
-        }
-        if (password.length < 4) {
-          alert('Please enter a password.');
-          return;
-        }        
-        // Sign in with email and pass.
-        // [START authwithemail]
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // [START_EXCLUDE]
-          if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-          } else {
-            alert(errorMessage);
-          }
-          console.log(error);
-          $('#sign-in').disabled = false;
-          // [END_EXCLUDE]
-        });
-        console.log('success');
-        $('#myModal').modal('hide');
-    	$('#logout-user').css('display', 'block');
-    	$('#login-modal').css('display', 'none');
-   		console.log('trying...')
-    }
- });
-firebase.auth().onAuthStateChanged(function(user) {
-			  if (user) {
-			    // User is signed in.
-			    app.userId = user.uid;
-				  app.signedIn = true;
-				  if(app.signedIn === true){
-					  app.addFavorites();
-				  }
-				  console.log(app.signedIn);
-			  } else {
-			    // User is signed out.
-			  }
-			});
-			$('#regModal').modal('hide');
-		});
+	       		// [START signout]
+		        firebase.auth().signOut();
+		        $('#login-modal').modal('hide');
+		    	$('#logout-user').css('display', 'none');
+		        // [END signout]
+	      	} else {       
+		        var email = $('#sign-in-email').val().trim();
+		        var password = $('#sign-in-password').val().trim();
+		        if (email.length < 4) {
+		          alert('Please enter an email address.');
+		          return;
+		        }
+		        if (password.length < 4) {
+			          alert('Please enter a password.');
+			          return;
+		        } 
+		    }
 
+        	// Sign in with email and pass.
+        	// [START authwithemail]
+    		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          		// Handle Errors here.
+          		var errorCode = error.code;
+          		var errorMessage = error.message;
+          		// [START_EXCLUDE]
+          		if (errorCode === 'auth/wrong-password') {
+            		alert('Wrong password.');
+		        } else {
+		            alert(errorMessage);
+		        }
+		        console.log(error);
+		        $('#sign-in').disabled = false;
+		        // [END_EXCLUDE]
+    		});
+
+	        console.log('success');
+	        $('#myModal').modal('hide');
+	    	$('#logout-user').css('display', 'block');
+	    	$('#login-modal').css('display', 'none');
+	   		console.log('trying...')
+    
+ 			firebase.auth().onAuthStateChanged(function(user) {
+				  if (user) {
+				    // User is signed in.
+				    app.userId = user.uid;
+					  app.signedIn = true;
+					  if(app.signedIn === true){
+						  app.addFavorites();
+					  }
+					  console.log(app.signedIn);
+				  } else {
+				    // User is signed out.
+				  }
+			});
+				$('#regModal').modal('hide');
+			});
 	},
 
 	register: function() {
 		console.log('Register function executed');
-
-
 		$('#register-user').on('click', function (event) {
-			console.log('register-user clicked');
 			event.preventDefault();
 <<<<<<< HEAD
 
@@ -559,8 +557,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 		});
 
 		$('#regModal').on('hidden.bs.modal', function () {
-    	$(this).find('form').trigger('reset');
-});
+    		$(this).find('form').trigger('reset');
+		});
 	},
 
 	addFavorites: function() {
@@ -584,8 +582,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 				database.ref("/"+ app.userId+ "/").child("favorites").child(app.artist).set(app.artist);
 				console.log("favorites clicked");
 			});
-	}
-
+	},
 
 	forgotPassword: function() {
 		$('#fpassuser').on('click', function () {
@@ -610,16 +607,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   				}
             });
           });
-            
-     
-      },
-
-	startApp: function() {
-		this.signIn();
-		this.register();
-	}
-	
-
+    },
 };
 
 $("#login-modal").click(function(){
