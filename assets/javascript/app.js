@@ -58,12 +58,12 @@ var app = {
         app.purchaseLinks();
         app.searchBand();
         app.spotifyWidget();
-        app.youtubeLink();
-        app.soundcloud();
-        app.itunes();
+        //app.youtubeLink();
+        //app.soundcloud();
+        //app.itunes();
         app.twitter();
-        app.instagram();
-        app.facebook();
+        //app.instagram();
+        //app.facebook();
         app.addFavorites();
         app.signIn();
         app.register();
@@ -122,6 +122,8 @@ var app = {
                 app.twitter = twitter_handle;
                 app.instagram = insta_url
                 app.facebook = fb_url;
+                app.socialLinks();
+                app.listenLinks();
                 console.log('twit: ', app.twitter, 'insta: ', app.instagram)
             });
         });
@@ -185,42 +187,6 @@ var app = {
 		});
 	},
 
-    spotifyWidget: function() {
-        $('#spotify-widget').on('click', function() {
-            event.preventDefault();
-            console.log(app.spotify);
-            // re-align widget, override the default margin
-            $('#listen-display').attr('style','margin: 10px 0px 10px 0px; ');
-            $('#listen-display').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
-        });
-    },
-
-    youtubeLink: function() {
-        $('#youtube-link').on('click', function() {
-            event.preventDefault();
-            console.log(app.youtube);
-            window.open('http://www.youtube.com/channel/' + app.youtube);
-        });
-    }, 
-
-    // soundcloud: function() {
-    //     $('#soundcloud-link').on('click', function() {
-    //         event.preventDefault();
-    //         console.log(app.artist.replace(/\s/g, ''));
-    //         // does not always work. some artist's links are different from just their names
-    //         // for example, soundcloud.com/glassanimals works fine but
-    //         // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
-    //         window.open('http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
-    //     });
-    // },
-
-    itunes: function() {
-        $('#itunes-link').on('click', function() {
-            event.preventDefault();
-            console.log('hi')
-            //$('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
-        });
-    },
 
     callJambase: function() {
         $.ajax({
@@ -270,6 +236,31 @@ var app = {
         $('#tour-div').append(concertDiv);
     },
 
+    //listen links
+    spotifyWidget: function() {
+        $('#spotify-widget').on('click', function() {
+            event.preventDefault();
+            console.log(app.spotify);
+            // re-align widget, override the default margin
+            $('#listen-display').attr('style','margin: 10px 0px 10px 0px; ');
+            $('#listen-display').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
+        });
+    },
+
+    listenLinks: function() {
+        $('#youtube-link').attr("href", 'http://www.youtube.com/channel/' + app.youtube);
+        //$('#soundcloud-link').attr("href", 'http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
+      },
+
+    // purchase links
+    purchaseLinks: function(){
+        $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
+        $('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
+        $('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
+
+    },
+
+    //social links
     twitter: function() {
         $('#twitter-link').on('click', function() {
             event.preventDefault();
@@ -287,21 +278,12 @@ var app = {
         });
     },
 
-    instagram: function() {
-        $('#instagram-link').on('click', function() {
-            event.preventDefault();
-            window.open(app.instagram);
-        });
-    },
+    socialLinks: function() {
+        $('#instagram-link').attr("href", app.instagram);
+        $('#facebook-link').attr("href", app.facebook);
+      },
 
-    facebook: function() {
-        $('#facebook-link').on('click', function() {
-            event.preventDefault();
-            window.open(app.facebook);
-        });
-    },
-
-	 googleMaps: function() {
+     googleMaps: function() {
             mapOption = {
                 zoom: 10,
                 center: new google.maps.LatLng(app.lat, app.long),
@@ -341,12 +323,6 @@ var app = {
     //     });
     // },
 
-    purchaseLinks: function(){
-        $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
-        $('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
-        $('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
-
-    },
 
     farmersMarket: function() {
         zip = app.testZip;
