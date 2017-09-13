@@ -67,7 +67,7 @@ var app = {
         app.addFavorites();
         this.signIn();
         this.register();
-<<<<<<< HEAD
+
 	},
 
 	addBandName: function(){
@@ -99,7 +99,7 @@ var app = {
 				//console.log(app.bio);
 				$('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
 			});
-=======
+		});
     },
 
     addBandName: function(){
@@ -131,7 +131,6 @@ var app = {
                 //console.log(app.bio);
                 $('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
             });
->>>>>>> 2b29b79ab470baad923cc7d2ec5dcc21060afe48
             // getting twitter handle
             $.ajax({
                 url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
@@ -328,26 +327,6 @@ var app = {
         });
     },
 
-    googleMaps: function() {
-    
-<<<<<<< HEAD
- 			firebase.auth().onAuthStateChanged(function(user) {
-			  if (user) {
-			    // User is signed in.
-			    app.userId = user.uid;
-				  app.signedIn = true;
-				  if(app.signedIn === true){
-					  app.addFavorites();
-				  }
-				  console.log(app.signedIn);
-			  } else {
-			    // User is signed out.
-			  }
-			});
-				$('#regModal').modal('hide');
-			});
-	},
-
 	register: function() {
 		console.log('Register function executed');
 		$('#register-user').on('click', function (event) {
@@ -462,7 +441,10 @@ var app = {
   				else {
     				console.error(error);
   				}
-=======
+  			});
+		});
+	},
+	 googleMaps: function() {
             mapOption = {
                 zoom: 10,
                 center: new google.maps.LatLng(app.lat, app.long),
@@ -591,12 +573,6 @@ var app = {
                 // [END_EXCLUDE]
             });
 
-            console.log('success');
-            $('#myModal').modal('hide');
-            $('#logout-user').css('display', 'block');
-            $('#login-modal').css('display', 'none');
-            console.log('trying...')
-    
             firebase.auth().onAuthStateChanged(function(user) {
                   if (user) {
                     // User is signed in.
@@ -611,7 +587,13 @@ var app = {
                   }
             });
                 $('#regModal').modal('hide');
-            });
+            }); 
+
+        	console.log('success');
+            $('#myModal').modal('hide');
+            $('#logout-user').css('display', 'block');
+            $('#login-modal').css('display', 'none');
+            console.log('trying...')
     },
 
     register: function() {
@@ -647,9 +629,7 @@ var app = {
                     });
                     console.log(userId);
                     // ...
-                } else {
-                    // User is signed out.
-                }
+                } 
             });
             $('#regModal').modal('hide');
         });
@@ -703,7 +683,6 @@ var app = {
                 else {
                     console.error(error);
                 }
->>>>>>> 2b29b79ab470baad923cc7d2ec5dcc21060afe48
             });
           });
     },
