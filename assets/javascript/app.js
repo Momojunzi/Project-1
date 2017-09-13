@@ -383,17 +383,51 @@ var app = {
 		$('#map').html('There are no upcoming tours instead have a look at some record sales data');
 		$('#tour-list-title').html('Record Sales List');
 	},
-
+	    
 	signIn: function(){
 		$('#sign-in').on('click', function(){
-			event.preventDefault();
-			var email = $('#sign-in-email').val().trim();
-			var pass = $('#sign-in-password').val().trim();
-			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
-				console.log(error.code);
-			})
-
-			firebase.auth().onAuthStateChanged(function(user) {
+      event.preventDefault();
+			if (firebase.auth().currentUser) {
+        // [START signout]
+        firebase.auth().signOut();
+         $('#login-modal').modal('hide');
+    	$('#logout-user').css('display', 'none');
+        // [END signout]
+      } else {       
+        var email = $('#sign-in-email').val().trim();
+        var password = $('#sign-in-password').val().trim();
+        if (email.length < 4) {
+          alert('Please enter an email address.');
+          return;
+        }
+        if (password.length < 4) {
+          alert('Please enter a password.');
+          return;
+        }        
+        // Sign in with email and pass.
+        // [START authwithemail]
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          $('#sign-in').disabled = false;
+          // [END_EXCLUDE]
+        });
+        console.log('success');
+        $('#myModal').modal('hide');
+    	$('#logout-user').css('display', 'block');
+    	$('#login-modal').css('display', 'none');
+   		console.log('trying...')
+    }
+ });
+firebase.auth().onAuthStateChanged(function(user) {
 			  if (user) {
 			    // User is signed in.
 			    var displayName = user.displayName;
@@ -410,12 +444,13 @@ var app = {
 			});
 
 		});
+
 	},
 
 	register: function() {
 		console.log('Register function executed')
 
-		$('#register-user').on('click', function (event) {
+		$('#register-user').on('click', function () {
 			console.log('register-user clicked')
 
 			event.preventDefault();
@@ -467,10 +502,16 @@ var app = {
 		        }
 		        console.log(error);
 		    });
+		    //$(this).find('form').trigger('reset');
+	      	$('#regModal').modal('hide');
 
-		    $('#regModal').modal('hide');
 		});
+
+		$('#regModal').on('hidden.bs.modal', function () {
+    	$(this).find('form').trigger('reset');
+});
 	},
+
 
 	favorites: function() {
 		if(app.signedIn === true){
@@ -484,6 +525,41 @@ var app = {
 		}
 
 	}
+
+
+	forgotPassword: function() {
+		$('#fpassuser').on('click', function () {
+			event.preventDefault();
+			console.log('starting');
+			var uname=$('#fp-username').val().trim();
+			console.log(uname);
+			var email = $('#fp-email').val().trim();
+			console.log(email);
+			var zip = $('#fp-zip').val().trim();
+
+			 firebase.auth.sendPasswordResetEmail(email).catch(function(error){
+			 	console.log('starting reset function');
+				var errorCode = error.code;
+  				var errorMessage = error.message;
+
+  				if (errorCode === 'auth/operation-not-allowed') {
+    			alert('You must enable Anonymous auth in the Firebase Console.');
+  				} 
+  				else {
+    				console.error(error);
+  				}
+            });
+          });
+            
+     
+      },
+
+	startApp: function() {
+		this.signIn();
+		this.register();
+	}
+	
+
 };
 
 $("#login-modal").click(function(){
