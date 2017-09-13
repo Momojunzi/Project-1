@@ -1,5 +1,7 @@
 body {
-	padding-bottom: 70px
+	padding-bottom: 70px;
+	background-color: #290629;
+	color: #ffffff;
 }
 
 html {
@@ -18,6 +20,6 @@ html {
 	text-align: center;
 }
 
-.row {
+/*.row {
 	border: 2px solid #ccc; 
-}
+}*/
