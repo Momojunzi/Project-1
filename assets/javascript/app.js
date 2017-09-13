@@ -31,6 +31,7 @@ window.twttr = (function(d, s, id) {
 
 
 var app = {
+	userId:"",
 	signedIn: false,
 	geoposition: false,
 	testZip: 94709,
@@ -63,7 +64,7 @@ var app = {
 		app.twitter();
 		app.instagram();
 		app.facebook();
-		app.favorites();
+		app.addFavorites();
         this.signIn();
         this.register();
 	},
@@ -77,7 +78,7 @@ var app = {
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
+			url: "https://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
@@ -88,7 +89,7 @@ var app = {
 			//console.log(data, app.spotify, app.youtube);
 			// get bio info on the artist
 			$.ajax({
-				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+				url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
 				method: "GET"
 			}).done(function(response) {
 				//console.log(response, response.data.artist_bio_short);
@@ -99,7 +100,7 @@ var app = {
 			});
             // getting twitter handle
             $.ajax({
-                url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+                url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
                 method: "GET"
             }).done(function(response) {
                 var twitter_url = response.data.twitter_url[0];
@@ -121,7 +122,7 @@ var app = {
 	callLastFm: function(){
 		// call lastFm for img
 		$.ajax({
-			url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
 		}).done(function(response) {
 			app.trackArr = [];
 			for (var i=0; i<10; i++) {
@@ -130,7 +131,7 @@ var app = {
 			}
 		});
 		$.ajax({
-			url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+			url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
 			method: "GET"
 		}).done(function(response){
 			console.log(response);
@@ -170,9 +171,9 @@ var app = {
 			console.log(app.formattedArtist);
 			// recall music graph and last fm to grab artist info
 			app.addBandName();
-			app.callMusicGraph();
-			app.callLastFm();
-			app.purchaseLinks();
+			//app.callMusicGraph();
+			//app.callLastFm();
+			//app.purchaseLinks();
 			console.log(app.formattedArtist);
 		});
 	},
@@ -275,7 +276,7 @@ var app = {
             
             {   
                 width: '450',
-                height: '500',
+                height: '500'
             });
         });
     },
@@ -306,7 +307,7 @@ var app = {
 					position: google.maps.ControlPosition.RIGHT_CENTER
 				},
 				scaleControl: false
-			}
+			};
 
 			infoWindow = new google.maps.InfoWindow({
 				content: "holding..."
@@ -319,6 +320,7 @@ var app = {
 			coordArr = app.address;
 			app.farmersMarket();
 			//app.callJambase();
+			
 	}, 
 
 	getGeoPosition: function() {
@@ -384,41 +386,38 @@ var app = {
 	},
 
 	signIn: function(){
-		$('#sign-in').on('click', function(){
+		$('#sign-in').on('click', function(event){
 			event.preventDefault();
 			var email = $('#sign-in-email').val().trim();
 			var pass = $('#sign-in-password').val().trim();
 			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error){
 				console.log(error.code);
-			})
+			});
 
 			firebase.auth().onAuthStateChanged(function(user) {
 			  if (user) {
 			    // User is signed in.
-			    var displayName = user.displayName;
-			    var userEmail = user.email;
-			    app.signedIn = true;
-			    console.log(app.signedIn);
-			    console.log(userEmail);
-			    // ...
+			    app.userId = user.uid;
+				  app.signedIn = true;
+				  if(app.signedIn === true){
+					  app.addFavorites();
+				  }
+				  console.log(app.signedIn);
 			  } else {
 			    // User is signed out.
-			    // ...
-			    
 			  }
 			});
-
+			$('#regModal').modal('hide');
 		});
 	},
 
 	register: function() {
-		console.log('Register function executed')
+		console.log('Register function executed');
 
 		$('#register-user').on('click', function (event) {
-			console.log('register-user clicked')
+			console.log('register-user clicked');
 
 			event.preventDefault();
-
 
 			var uname=$('#sign-up-name').val().trim();
 			console.log(uname);
@@ -427,7 +426,6 @@ var app = {
 			var pass = $('#sign-up-password').val().trim();
 			var zip = $('#zipcode').val().trim();
 			
-
 			if (email.length < 4) {
 	      		alert('Please enter an email address.');
 	        	return;
@@ -445,18 +443,10 @@ var app = {
 	        	return;
       		}
 
-      		database.ref().push({
-
-    			email:email,
-    			password:pass,
-    			zip:zip,
-    			uname:uname
-    			//created:firebase.database.ServerValue.TIMESTAMP
-  			});
-
-	      	firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
+			firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
 		        var errorCode = error.code;
 		        var errorMessage = error.message;
+				var favorites = [];
 		        if (errorCode === 'auth/weak-password') {
 		        	alert('The password is too weak.');
 		        } else if (errorCode === 'auth/invalid-email'){
@@ -465,23 +455,53 @@ var app = {
 		        	alert(errorMessage);
 		        }
 		        console.log(error);
-		    });
+			});
 
-		    $('#regModal').modal('hide');
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					// User is signed in.
+					var userId = user.uid;
+					database.ref().push({
+						userId:userId
+						//created:firebase.database.ServerValue.TIMESTAMP
+					});
+					database.ref(userId).set({
+						email:email,
+						zip:zip,
+						uname:uname,
+						favorites:""
+					});
+					console.log(userId);
+					// ...
+				} else {
+					// User is signed out.
+				}
+			});
+			$('#regModal').modal('hide');
 		});
 	},
 
-	favorites: function() {
-		if(app.signedIn === true){
-			$('#addFavorites').css({color: '#42b3f4', display: 'inline-block'})
-				.on('click', function(){
-
-				})
-
+	addFavorites: function() {
+		database.ref("/"+ app.userId+ "/favorites").on('value', function(snapshot){
+			console.log(snapshot.val());
+			var favobj = snapshot.val();
+			var favArr = Object.values(favobj);
+			$('#favorites').empty();
+			for(var i=0; i<favArr.length; i++) {
+				var favDiv = $('<h4 class="favorite">').html(favArr[i]);
+				$('#favorites').append(favDiv).append('<hr/>');
+			}
+			console.log(favArr);
+		});
+		if(app.signedIn) {
+			$('#addFavorites').css({color: '#42b3f4', display: 'block'});
 		}else{
 			$('#addFavorites').css({display: 'none'});
 		}
-
+		$('#addFavorites').on('click', function(){
+				database.ref("/"+ app.userId+ "/").child("favorites").child(app.artist).set(app.artist);
+				console.log("favorites clicked");
+			});
 	}
 };
 
@@ -503,6 +523,7 @@ $("#fPassword-modal").click(function(){
 	$('#regModal').modal('hide');
 	$('#passModal').modal('show');
 });
+
 
 
 $(document).ready(function(){

@@ -1,9 +1,9 @@
 body {
-	padding-bottom: 70px
+  padding-bottom: 70px
 }
 
 html {
-	position: relative;
+  position: relative;
     min-height: 100%;
 }
 
@@ -13,7 +13,11 @@ html {
 }
 
 #footer {
-	position: absolute;
-	bottom: 0;
-	text-align: center;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+}
+
+#addFavorites {
+    display: none;
 }
