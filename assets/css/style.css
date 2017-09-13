@@ -9,6 +9,10 @@ html {
     min-height: 100%;
 }
 
+#login-modal {
+  display: block;
+}
+
 #map {
   height: 500px;
   width: 750px;
