@@ -319,7 +319,6 @@ var app = {
 			coordArr = app.address;
 			app.farmersMarket();
 			//app.callJambase();
-			
 	}, 
 
 	getGeoPosition: function() {
@@ -504,7 +503,6 @@ $("#fPassword-modal").click(function(){
 	$('#regModal').modal('hide');
 	$('#passModal').modal('show');
 });
-
 
 
 $(document).ready(function(){
