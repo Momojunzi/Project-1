@@ -1,11 +1,15 @@
 body {
+<<<<<<< HEAD
 	padding-bottom: 70px;
 	background-color: #290629;
 	color: #ffffff;
+=======
+  padding-bottom: 70px
+>>>>>>> 82ce5d2cefa07ca0f654a5add5984abaf2ffd24a
 }
 
 html {
-	position: relative;
+  position: relative;
     min-height: 100%;
 }
 
@@ -22,10 +26,21 @@ html {
 	display: none;
 }
 #footer {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+}
+
+#addFavorites {
+    display: none;
 	position: absolute;
 	bottom: 0;
 	text-align: center;
+<<<<<<< HEAD
 
 /*.row {
 	border: 2px solid #ccc; 
 }*/
+=======
+}
+>>>>>>> 82ce5d2cefa07ca0f654a5add5984abaf2ffd24a

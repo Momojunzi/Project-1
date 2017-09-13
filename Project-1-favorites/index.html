@@ -7,7 +7,6 @@
 
     <!-- Bootstrap 3.3.7 added -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- link to app stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
@@ -30,60 +29,11 @@
     <section>
 
       <nav class="navbar navbar-default">
-        <div class="container-fluid data-header">
+        <div class="container-fluid">
           <div class="navbar-header">
             <a class="navbar-brand">Muband</a>
           </div>
           <button type="button" class="btn btn-default navbar-btn navbar-right" id="login-modal">Log in</button>
-
-           <a id="userdisplayname">User Name</a>
-            <button type="button" class="btn btn-default navbar-btn navbar-right" id="logout-user">Logout</button>
-          <!-- Login Modal Start -->
-          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" hidden>
-          <div class="modal-dialog">
-          <div class="loginmodal-container">
-            <h1>Login to Your Account</h1><br>
-            <form id="login-form">
-             <input type="E-mail" name="user" id="sign-in-email"placeholder="E-mail ID">
-             <input type="password" name="pass" id ="sign-in-password" placeholder="Password">
-            <input type="button" name="login" id="sign-in" class="login loginmodal-submit" value="Login">
-            </form>
-          
-          <div class="login-help">
-          <a id="register-modal">Register</a> - <a id="fPassword-modal">Forgot Password</a>
-          </div>
-        </div>
-      </div>
-      </div>
-      <!-- Login Modal End -->
-      <!-- Register Modal -->
-            <div class="modal fade" id="regModal" tabindex="-1" data-dismiss="modal" role="dialog" aria-labelledby="regModalLabel" hidden>
-          <div class="modal-dialog">
-          <div class="register-container">
-            <h1>Register Your Account</h1><br>
-            <form>
-            <input type="text" id="sign-up-name" name="username" placeholder="Name">
-             <input type="E-mail" id ="sign-up-email"name="e-mail" placeholder="E-mail ID">
-             <input type="password" id="sign-up-password"name="pass" placeholder="Password">
-             <input type="text" id="zipcode" name="Zip" placeholder="Zipcode">
-            <input type="submit" name="Register" id= "register-user"class="reg regmodal-submit" value="Submit">
-            </form>
-          </div>
-          </div>
-          </div>
-<!-- Register Modal End-->
-        <!-- Forgot Password Modal -->
-            <div class="modal fade" id="passModal" tabindex="-1" role="dialog" aria-labelledby="fPasswordModalLabel" hidden>
-          <div class="modal-dialog">
-          <div class="forgotPassword-container">
-            <h1>Enter Your Account Details</h1><br>
-            <form id="fPassword-form">
-            <input type="text" name="username" id="fp-username" placeholder="Name">       
-            <input type="E-mail" name="e-mail" id="fp-email"placeholder="E-mail ID">
-            <input type="text" name="Zip" id="fp-zip" placeholder="Zipcode">
-            <input type="submit" name="ForgotPassword" class="login loginmodal-submit" id = "fpassuser" value="Submit">
-            </form>
-
 
           <!-- Login Modal Start -->
           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" hidden>
@@ -102,7 +52,6 @@
                 </div>
               </div>
             </div>
-
           </div>
           <!-- Login Modal End -->
           <!-- Register Modal -->
@@ -170,14 +119,14 @@
             <!-- content row -->
             <div class="row">
               <!--Image column -->
-              <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="col-md-4 col-sm-12">
                 <div id="image-div"> 
                   <h3 class="in-container-hdr">artist image</h3> 
                 </div>
               </div>
 
               <!-- Content column-->
-              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+              <div class="col-md-8 col-sm-12">
                 <div id="content-div"> 
                   <h3 class="in-container-hdr">artist bio</h3> 
               	</div>
@@ -190,7 +139,7 @@
           </div>
 
           <!-- Listen & favorite column-->
-          <div class="col-md-4 col-sm-12 col-xs-12">
+          <div class="col-md-4">
 
             <!-- listen/purchase row -->
             <div class="row"> 
@@ -199,49 +148,43 @@
                 <h3 class="in-container-hdr">Listen and Buy Here</h3>
                 <hr style="border-width:3px;">
 
-              <div class="col-md-12">
                 <div class="row" id="listen-row">
-                  <div class="col-md-4 col-sm-2 col-xs-4">
+                  <div class="col-md-4">
                     <button class="btn btn-default" id="spotify-widget">Spotify</button>
                   </div>
 
-                  <div class="col-md-4 col-sm-2 col-xs-4">
-                    <a id="youtube-link" href="#" target="_blank">
-                      <button class="btn btn-default">Youtube</button>
-                    </a>
+                  <div class="col-md-4">
+                    <button class="btn btn-default" id="youtube-link">Youtube</button>
                   </div>
 
-                  <div class="col-md-4 col-sm-2 col-xs-4">
-                    <a id="soundcloud-link" href="#" target="_blank">
-                      <button class="btn btn-default">SoundCloud</button>
-                    </a>
+                  <div class="col-md-4">
+                    <button class="btn btn-default" id="soundcloud-link">SoundCloud</button>
                   </div>
                 </div>
-              
 
                 <div class="row" id="listen-display"></div>
 
                 <div class="row" id="purchase-row">
-                  <div class="col-md-4 col-sm-2 col-xs-4">
+                  <div class="col-md-4">
                     <a id="itunes-purchase" href="#" target="_blank">
-                      <button class="btn btn-default" id="itunes-link">iTunes</button>
+                    	<button class="btn btn-default" id="itunes-link">iTunes</button>
                     </a>
                       <!-- <a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-sm.svg) no-repeat;width:70px;height:15px;background-size:contain;"></a> -->
                  </div>
 
-                  <div class="col-md-4 col-sm-2 col-xs-4">
+                  <div class="col-md-4">
                     <a id="google-purchase" href="#" target="_blank">
                     	<button class="btn btn-default" id="googleplay-link">Google Play</button>
-                    </a>
-                  </div>  
-
-                  <div class="col-md-4 col-sm-2 col-xs-4">
-                    <a id="amazon-purchase" href="#" target="_blank">
-						          <button class="btn btn-default" id="amazonmusic-link">Amazon Music</button>
-                    </a>
+					</a>
+                    
                   </div>
-                </div>
-                <!-- close purchase row -->
+
+                  <div class="col-md-4">
+                    <a id="amazon-purchase" href="#" target="_blank">
+						<button class="btn btn-default" id="amazonmusic-link"> Amazon Music</button>
+					</a>
+                   
+                  </div>
                 </div>
 
               </div>
@@ -266,7 +209,7 @@
         <div class="row">
           
           <!-- Map -->
-          <div class="col-md-8 col-sm-12">
+          <div class="col-md-8">
             <div class="row">
 
               <div class="col-md-12">
@@ -289,28 +232,23 @@
           </div>
 
           <!-- Social Feed -->
-          <div class="col-md-4 col-sm-12 col-xs-12">
+          <div class="col-md-4">
             <div> 
               <h3 class="in-container-hdr">Social</h3>
               <hr style="border-width:3px;">
             </div>
-
             <div class="row">
 
-              <div class="col-md-4 col-sm-2 col-xs-4">
+              <div class="col-md-4">
                 <button class="btn btn-default" id="twitter-link">Twitter</button>
               </div>
 
-              <div class="col-md-4 col-sm-2 col-xs-4">
-                <a id="instagram-link" href="#" target="_blank">
-                  <button class="btn btn-default">Instagram</button>
-                </a>
+              <div class="col-md-4">
+                <button class="btn btn-default" id="instagram-link">Instagram</button>
               </div>
 
-              <div class="col-md-4 col-sm-2 col-xs-4">
-                <a id="facebook-link" href="#" target="_blank">
-                  <button class="btn btn-default">Facebook</button>
-                </a>
+              <div class="col-md-4">
+                <button class="btn btn-default" id="facebook-link">Facebook</button>
               </div>
             </div>
 
