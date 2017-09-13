@@ -104,7 +104,7 @@ var app = {
                 //get short bio and parse the markup returned
                 app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
                 //console.log(app.bio);
-                $('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
+                $('#content-div').html('<p>' + app.bio + '<p>');//remove and put in a different function that draws to the page
             });
             // getting twitter handle
             $.ajax({
@@ -203,22 +203,22 @@ var app = {
         });
     }, 
 
-    soundcloud: function() {
-        $('#soundcloud-link').on('click', function() {
-            event.preventDefault();
-            console.log(app.artist.replace(/\s/g, ''));
-            // does not always work. some artist's links are different from just their names
-            // for example, soundcloud.com/glassanimals works fine but
-            // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
-            window.open('http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
-        });
-    },
+    // soundcloud: function() {
+    //     $('#soundcloud-link').on('click', function() {
+    //         event.preventDefault();
+    //         console.log(app.artist.replace(/\s/g, ''));
+    //         // does not always work. some artist's links are different from just their names
+    //         // for example, soundcloud.com/glassanimals works fine but
+    //         // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
+    //         window.open('http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
+    //     });
+    // },
 
     itunes: function() {
         $('#itunes-link').on('click', function() {
             event.preventDefault();
             console.log('hi')
-            $('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
+            //$('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
         });
     },
 

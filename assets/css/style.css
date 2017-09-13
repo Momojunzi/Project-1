@@ -4,9 +4,8 @@
 
 body {
 	padding-bottom: 70px;
-/*	background-color: #290629;
-	color: #ffffff;*/
-	font-family: 'Noto Sans', sans-serif;
+	background-color: #290629;
+	color: #ffffff;
 }
 
 html {
@@ -55,7 +54,84 @@ html {
 	display: block;
 }
 
+/*h1, h2, h3 {
+	font-family: 'Libre Franklin', sans-serif;
+}*/
 /*.row {
 	border: 2px solid #ccc; 
 }*/
+
+html, body {
+	font-size: 10px;
+}
+
+h1 {
+	font-family: Libre Franklin;
+	font-size: 6.103515625em;
+	font-style: normal;
+	font-weight: 200;
+	letter-spacing: 0em;
+	line-height: 9rem;
+	margin-bottom: 3rem;
+}
+
+h2 {
+	font-family: Libre Franklin;
+	font-size: 4.8828125em;
+	font-style: normal;
+	font-weight: 500;
+	letter-spacing: 0em;
+	line-height: 6rem;
+	margin-bottom: 3rem;
+}
+
+h3 {
+	font-family: Libre Franklin;
+	font-size: 3.90625em;
+	font-style: normal;
+	font-weight: 200;
+	letter-spacing: 0em;
+	line-height: 6rem;
+	margin-bottom: 3rem;
+}
+
+h4 {
+	font-family: Libre Franklin;
+	font-size: 3.125em;
+	font-style: normal;
+	font-weight: 700;
+	letter-spacing: 0em;
+	line-height: 6rem;
+	margin-bottom: 3rem;
+}
+
+h5 {
+	font-family: Libre Franklin;
+	font-size: 2.5em;
+	font-style: normal;
+	font-weight: 700;
+	letter-spacing: 0em;
+	line-height: 3rem;
+	margin-bottom: 3rem;
+}
+
+h6 {
+	font-family: Libre Franklin;
+	font-size: 2em;
+	font-style: normal;
+	font-weight: 700;
+	letter-spacing: 0em;
+	line-height: 3rem;
+	margin-bottom: 3rem;
+}
+
+p {
+	font-family: Libre Franklin;
+	font-size: 1.6em;
+	font-style: normal;
+	font-weight: 400;
+	letter-spacing: 0em;
+	line-height: 3rem;
+	margin-bottom: 3rem;
+}
 
