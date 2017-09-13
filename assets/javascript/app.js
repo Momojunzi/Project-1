@@ -65,8 +65,8 @@ var app = {
         app.instagram();
         app.facebook();
         app.addFavorites();
-        this.signIn();
-        this.register();
+        app.signIn();
+        app.register();
 	},
 
     addBandName: function(){
