@@ -1,5 +1,7 @@
 body {
-	padding-bottom: 70px
+	padding-bottom: 70px;
+	background-color: #290629;
+	color: #ffffff;
 }
 
 html {
@@ -11,7 +13,6 @@ html {
   height: 500px;
   width: 750px;
 }
-
 
 #logout-user{
 	display: none;
@@ -25,4 +26,6 @@ html {
 	bottom: 0;
 	text-align: center;
 
-}
+/*.row {
+	border: 2px solid #ccc; 
+}*/
