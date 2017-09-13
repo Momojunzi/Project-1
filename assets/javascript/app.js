@@ -103,7 +103,15 @@ var app = {
     },
 
     addBandName: function(){
-        $('#bandName').html(app.artist);
+    	var splitArtist = app.artist.split(' ');
+    	for(var i=0; i<splitArtist.length; i++){
+    		var name = splitArtist[i].split('');
+    		name[0] = name[0].toUpperCase();
+    		splitArtist[i] = name.join('');
+    	}
+    	var capitolArtist = splitArtist.join(' ');
+    	console.log(capitolArtist);
+        $('#bandName').html(capitolArtist);
         console.log(app.signedIn);
     },
     // ajax call to api for band summmary information
