@@ -78,7 +78,7 @@ var app = {
 		var musicGraphId;
 		//get general music graph info like music graph id and spotify and youtube ids
 		$.ajax({
-			url: "https://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
+			url: "http://api.musicgraph.com/api/v2/artist/search?api_key=c8303e90962e3a5ebd5a1f260a69b138&name=" + app.formattedArtist,
 			method: "GET"
 		}).done(function(response){
 			var data = response.data[0];
@@ -89,7 +89,7 @@ var app = {
 			//console.log(data, app.spotify, app.youtube);
 			// get bio info on the artist
 			$.ajax({
-				url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+				url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/biography?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
 				method: "GET"
 			}).done(function(response) {
 				//console.log(response, response.data.artist_bio_short);
@@ -100,7 +100,7 @@ var app = {
 			});
             // getting twitter handle
             $.ajax({
-                url: "https://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
+                url: "http://api.musicgraph.com/api/v2/artist/" + musicGraphId + "/social-urls?api_key=c8303e90962e3a5ebd5a1f260a69b138&explaintext",
                 method: "GET"
             }).done(function(response) {
                 var twitter_url = response.data.twitter_url[0];
@@ -432,17 +432,17 @@ var app = {
 	   		console.log('trying...')
     
  			firebase.auth().onAuthStateChanged(function(user) {
-				  if (user) {
-				    // User is signed in.
-				    app.userId = user.uid;
-					  app.signedIn = true;
-					  if(app.signedIn === true){
-						  app.addFavorites();
-					  }
-					  console.log(app.signedIn);
-				  } else {
-				    // User is signed out.
+			  if (user) {
+			    // User is signed in.
+			    app.userId = user.uid;
+				  app.signedIn = true;
+				  if(app.signedIn === true){
+					  app.addFavorites();
 				  }
+				  console.log(app.signedIn);
+			  } else {
+			    // User is signed out.
+			  }
 			});
 				$('#regModal').modal('hide');
 			});
