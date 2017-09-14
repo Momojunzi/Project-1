@@ -60,7 +60,6 @@ var app = {
         app.spotifyWidget();
         app.youtubeLink();
         app.soundcloud();
-        app.itunes();
         app.twitter();
         app.instagram();
         app.facebook();
@@ -220,14 +219,6 @@ var app = {
         });
     },
 
-    itunes: function() {
-        $('#itunes-link').on('click', function() {
-            event.preventDefault();
-            console.log('hi')
-            $('#itunes-link').html('<a href="https://geo.itunes.apple.com/us/album/how-to-be-a-human-being/id1119848454?mt=1&app=music" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/music-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain;"></a>')
-        });
-    },
-
     callJambase: function() {
         $.ajax({
             url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
@@ -348,7 +339,7 @@ var app = {
     },
 
     purchaseLinks: function(){
-        $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
+        $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/");
         $('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
         $('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
 
@@ -390,8 +381,8 @@ var app = {
     },  
 
     d3Function: function() {
-        $("#map-container").html("");
-        $('#map-container').append('<h3>Top Tracks by plays</h3>')
+        $("#map").html("");
+        $('#map-title').html('<h3>Top Tracks by plays</h3>')
         //var trackArr =[{name:"one", playcount:1000000, listens:1006000},{name:'two', playcount:140500,listens:100600},{name:"three", playcount:105000,listens:102650},{name:"four", playcount:150000,listens:100800}]
         var tracks = app.trackArr.map(function(t){
             return t.name;
@@ -404,15 +395,15 @@ var app = {
        		.range([0, width-margin.left-margin.right])
 			.nice();
         var listenxScale = d3.scaleLinear()
-			.domain([0, app.trackArr[1].listens/*d3.max(trackArr, function(d){return d.playcount})]*/])
+			.domain([0, app.trackArr[1].listeners/*d3.max(trackArr, function(d){return d.playcount})]*/])
 			.range([0, width-margin.left-margin.right])
 			.nice();
         var trackScale = d3.scaleBand()
 			.domain([0, tracks])
-			.range([0, height/tracks.length])
+			.range([0, height/(tracks.length/2)])
 		.paddingInner(0.1);
         var bandwidth = trackScale.bandwidth();
-       	var svg = d3.select('#map-container').append('svg')
+       	var svg = d3.select('#map').append('svg')
        		.attr('width', width)
        		.attr('height', height);
 		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
@@ -425,24 +416,24 @@ var app = {
 		svg.selectAll('text').data(app.trackArr).enter().append('text')
 			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.playcount + " plays"})
 			.attr('x', margin.left/2)
-			.attr('y', function(d,i){return i * bandwidth + (bandwidth/2)})
+			.attr('y', function(d,i){return i * bandwidth + (bandwidth)})
 			.attr('class', 'plays-text');
 
-		$("#tour-container").html("");
-        $('#tour-container').append('<h3>Top Tracks by listeners</h3')
+		$("#tour-div").html("");
+        $('#tour-list-title').html('<h3>Top Tracks by listeners</h3')
        	var width = 750;
        	var height = 450;
-       	var svg = d3.select('#tour-container').append('svg')
+       	var svg = d3.select('#tour-div').append('svg')
 			.attr('width', width)
 			.attr('height', height);
 		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
 			.attr('height', bandwidth)
-			.attr('width', function(d,i){return listenxScale(d.listens)})
+			.attr('width', function(d,i){return listenxScale(d.listeners)})
 			.attr('x', 0)
 			.attr('y', function(d,i){return (i * (bandwidth +1))})
 			.attr('class', 'listen-bar');
         svg.selectAll('text').data(app.trackArr).enter().append('text')
-			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.listens + " listeners"})
+			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.listeners + " listeners"})
 			.attr('x', margin.left/2)
 			.attr('y', function(d,i){return i * bandwidth + (bandwidth/2)})
 			.attr('class', 'plays-text');
