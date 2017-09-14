@@ -391,51 +391,61 @@ var app = {
 
     d3Function: function() {
         $("#map-container").html("");
-        $('#map-container').append('<h3>Top Tracks by plays</h3')
+        $('#map-container').append('<h3>Top Tracks by plays</h3>')
+        //var trackArr =[{name:"one", playcount:1000000, listens:1006000},{name:'two', playcount:140500,listens:100600},{name:"three", playcount:105000,listens:102650},{name:"four", playcount:150000,listens:100800}]
+        var tracks = app.trackArr.map(function(t){
+            return t.name;
+        });
         var margin = {top: 10, right: 0, bottom: 20, left: 50}
        	var width = 750;
        	var height = 450;
        	var xScale = d3.scaleLinear()
-       		.range([0, width - margin.left - margin.right])
-
-
+			.domain([0, app.trackArr[1].playcount/*d3.max(trackArr, function(d){return d.playcount})]*/])
+       		.range([0, width-margin.left-margin.right])
+			.nice();
+        var listenxScale = d3.scaleLinear()
+			.domain([0, app.trackArr[1].listens/*d3.max(trackArr, function(d){return d.playcount})]*/])
+			.range([0, width-margin.left-margin.right])
+			.nice();
+        var trackScale = d3.scaleBand()
+			.domain([0, tracks])
+			.range([0, height/tracks.length])
+		.paddingInner(0.1);
+        var bandwidth = trackScale.bandwidth();
        	var svg = d3.select('#map-container').append('svg')
        		.attr('width', width)
        		.attr('height', height);
 		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
-			.attr('height', function(d,i){return height /(app.trackArr.length) -5})
-			.attr('width', function(d,i){return d.playcount / 500})
+			.attr('height', bandwidth)
+			.attr('width', function(d,i){return xScale(d.playcount)})
 			//.attr('width', function(d,i){return xScale(d.playcount/1000) - width - margin.left })
-			.attr('x', function(d,i){return 10 - (d.playcount / 1000)})
-			.attr('y', function(d,i){return i * 45})
+			.attr('x', 0)
+			.attr('y', function(d,i){return (i * (bandwidth +1))})
 			.attr('class', 'bar');
 		svg.selectAll('text').data(app.trackArr).enter().append('text')
-			.text(function(d){return d.name + " " + d.playcount + " plays"})
-				.attr('x', function(d,i){return 5 + d.playcount/100000 })	
-				.attr('y', function(d,i){return (i * 45) +22.5})
-				.attr('class', 'plays-text');
+			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.playcount + " plays"})
+			.attr('x', margin.left/2)
+			.attr('y', function(d,i){return i * bandwidth + (bandwidth/2)})
+			.attr('class', 'plays-text');
 
 		$("#tour-container").html("");
         $('#tour-container').append('<h3>Top Tracks by listeners</h3')
        	var width = 750;
        	var height = 450;
        	var svg = d3.select('#tour-container').append('svg')
-       		.attr('width', width)
-       		.attr('height', height)
+			.attr('width', width)
+			.attr('height', height);
 		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
-			.attr('height', function(d,i){return height /(app.trackArr.length) -5})
-			.attr('width', function(d,i){return d.listeners / 200})
-			.attr('x', function(d,i){return 10 - (d.listeners / 1000)})
-			.attr('y', function(d,i){return i * 45})
-			.attr('class', 'listen-bar')
-		svg.selectAll('text').data(app.trackArr).enter().append('text')
-			.text(function(d){return d.name + " " + d.listeners + " listeners"})
-				.attr('x', function(d,i){return 5 + d.listeners/100000 })	
-				.attr('y', function(d,i){return (i * 45) +22.5})
-				.attr('class', 'plays-text')
-
-
-
+			.attr('height', bandwidth)
+			.attr('width', function(d,i){return listenxScale(d.listens)})
+			.attr('x', 0)
+			.attr('y', function(d,i){return (i * (bandwidth +1))})
+			.attr('class', 'listen-bar');
+        svg.selectAll('text').data(app.trackArr).enter().append('text')
+			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.listens + " listeners"})
+			.attr('x', margin.left/2)
+			.attr('y', function(d,i){return i * bandwidth + (bandwidth/2)})
+			.attr('class', 'plays-text');
     },
         
     signIn: function(){
