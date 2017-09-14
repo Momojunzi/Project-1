@@ -330,18 +330,18 @@ var app = {
             
     }, 
 
-    // getGeoPosition: function() {
-    //     navigator.geolocation.getCurrentPosition(function(pos){
-    //         var coords = pos.coords;
-    //         app.lat = coords.latitude; 
-    //         app.long = coords.longitude;
-    //         console.log(app.lat, app.long);
-    //         app.geoposition = true;
-    //         app.googleMaps();
-    //     }, function(err) {
-    //             console.log(err.code) 
-    //     });
-    // },
+    getGeoPosition: function() {
+        navigator.geolocation.getCurrentPosition(function(pos){
+            var coords = pos.coords;
+            app.lat = coords.latitude; 
+            app.long = coords.longitude;
+            console.log(app.lat, app.long);
+            app.geoposition = true;
+            app.googleMaps();
+        }, function(err) {
+                console.log(err.code) 
+        });
+    },
 
     purchaseLinks: function(){
         $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
@@ -474,18 +474,7 @@ var app = {
             });
 
             firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // [START_EXCLUDE]
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
-                console.log(error);
-                $('#sign-in').disabled = false;
-                // [END_EXCLUDE]
+                console.log(error)
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
