@@ -552,9 +552,11 @@ var app = {
             var favArr = Object.values(favobj);
             $('#favorites').empty();
             for(var i=0; i<favArr.length; i++) {
-                var favDiv = $('<h4 class="favorite">').html(favArr[i]);
+                var favDiv = $('<h4>').addClass("favorite-entry").html(favArr[i]);
                 $('#favorites').append(favDiv).append('<hr/>');
+
             }
+            app.clickFavorite();
             console.log(favArr);
         });
         if(app.signedIn) {
@@ -623,12 +625,28 @@ var app = {
       },
 
     clickFavorite: function() {
-    	$('.favorite').on('click', function(){
+        var clickedFav = $(".favorite-entry");
+    	clickedFav.on('click', function(){
     		console.log("favorite!");
-    		var bandName = $(this).html();
-    		console.log("name from favorites: ");
+            $('#social-display').html('');
+            $('#listen-display').html('');
+            $('#tour-div').html('');
+            var searchedArtist = $(this).html();
+            console.log(searchedArtist);
+            app.artist = searchedArtist;
+            console.log(app.artist);
+            // format artist name for query string
+            app.formattedArtist = searchedArtist.split(" ").join('+');
+            console.log(app.formattedArtist);
+            // recall music graph and last fm to grab artist info
+            app.addBandName();
+            app.callMusicGraph();
+            app.callLastFm();
+            app.purchaseLinks();
+            console.log(app.formattedArtist);
+
     	});
-    },  
+    }
 };
 
 $("#login-modal").click(function(){
