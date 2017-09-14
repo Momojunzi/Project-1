@@ -39,7 +39,7 @@ var app = {
     long: "",
     artist: "Glass Animals",
     formattedArtist: "Glass+Animals",
-    ontour: "0",
+    ontour: "",
     spotify: "",
     youtube: "",
     twitter: "",
@@ -69,6 +69,7 @@ var app = {
         app.register();
         app.forgotPassword();
         app.logout();
+        app.clickFavorite();
 	},
 
     addBandName: function(){
@@ -131,35 +132,38 @@ var app = {
 
     callLastFm: function(){
         // call lastFm for img
-        $.ajax({
-            url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
-        }).done(function(response) {
-            app.trackArr = [];
-            for (var i=0; i<10; i++) {
-                app.trackArr.push(response.toptracks.track[i]);
-                console.log(app.trackArr);
-            }
-        });
+        
         $.ajax({
             url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
             method: "GET"
         }).done(function(response){
             console.log(response);
-            //app.ontour = response.artist.ontour;
+            app.ontour = response.artist.ontour;
             console.log(app.ontour);
             console.log(typeof(response.artist.image[3]['#text']));
             app.imageUrl = response.artist.image[3]['#text'];
             $("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
-            if (app.ontour === "0"){
-                app.d3Function();
-            }
-            if(app.ontour === "1"){
-                if(app.geoposition === false) {
-                    app.getGeoPosition();
-                }else{
-                    app.googleMaps();
-                }
-            }
+			$.ajax({
+	            url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
+	        }).done(function(response) {
+	            app.trackArr = [];
+	            for (var i=0; i<10; i++) {
+	                app.trackArr.push(response.toptracks.track[i]);
+	                console.log(app.trackArr);
+	            }
+	            if (app.ontour === "0"){
+		            app.d3Function();
+		        }
+		        if(app.ontour === "1"){
+		            if(app.geoposition === false) {
+		                app.getGeoPosition();
+		            }else{
+		                app.googleMaps();
+		            }
+		        }
+	        });
+
+            
         });
     },
 
@@ -387,37 +391,51 @@ var app = {
 
     d3Function: function() {
         $("#map-container").html("");
-        var margin = { top: 10, right: 0, bottom: 20, left: 50},
-        	width = 650,
-        	height = 400;
-    	var svg = d3.select('#map-container').append('svg')
-    		.attr("height", height)
-    		.attr("width", width)
-    		.attr('viewbox', "0 0" + width + " " + height);
-		var yScale = d3.scaleLinear()
-			.range([height - margin.top - margin.bottom, 0]);
-		var xScale = d3.scaleOrdinal()
-			.range([0, width - margin.right - margin.left], .1);
-		var xAxis = d3.axisBottom()
-			.scale(xScale)
-		var yAxis = d3.axisLeft()
-			.scale(yScale)
-		svg.append('g')
-			//.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-			.selectAll('.bar').data(app.trackArr).enter().append('rect')
-				.attr('class', 'bar')
-				.attr('x', function(d){return (width / app.trackArr.length) - 1;})
-				.attr('y', function(d){return d.playcount/100000;})
-				.attr('height', function(d){return d.playcount / 100000;})
-				.attr('length', function(d){return (width / app.trackArr.length) - 2});
-		svg.append('g')
-			.attr('class', 'yaxis')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-			.call(yAxis);
-		svg.append('g')
-			.attr('class', 'xaxis')
-			.attr('transform', 'translate(' + margin.left + ',' + (height - margin.bottom) + ')')
-			.call(xAxis);
+        $('#map-container').append('<h3>Top Tracks by plays</h3')
+        var margin = {top: 10, right: 0, bottom: 20, left: 50}
+       	var width = 750;
+       	var height = 450;
+       	var xScale = d3.scaleLinear()
+       		.range([0, width - margin.left - margin.right])
+
+
+       	var svg = d3.select('#map-container').append('svg')
+       		.attr('width', width)
+       		.attr('height', height);
+		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
+			.attr('height', function(d,i){return height /(app.trackArr.length) -5})
+			.attr('width', function(d,i){return d.playcount / 500})
+			//.attr('width', function(d,i){return xScale(d.playcount/1000) - width - margin.left })
+			.attr('x', function(d,i){return 10 - (d.playcount / 1000)})
+			.attr('y', function(d,i){return i * 45})
+			.attr('class', 'bar');
+		svg.selectAll('text').data(app.trackArr).enter().append('text')
+			.text(function(d){return d.name + " " + d.playcount + " plays"})
+				.attr('x', function(d,i){return 5 + d.playcount/100000 })	
+				.attr('y', function(d,i){return (i * 45) +22.5})
+				.attr('class', 'plays-text');
+
+		$("#tour-container").html("");
+        $('#tour-container').append('<h3>Top Tracks by listeners</h3')
+       	var width = 750;
+       	var height = 450;
+       	var svg = d3.select('#tour-container').append('svg')
+       		.attr('width', width)
+       		.attr('height', height)
+		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
+			.attr('height', function(d,i){return height /(app.trackArr.length) -5})
+			.attr('width', function(d,i){return d.listeners / 200})
+			.attr('x', function(d,i){return 10 - (d.listeners / 1000)})
+			.attr('y', function(d,i){return i * 45})
+			.attr('class', 'listen-bar')
+		svg.selectAll('text').data(app.trackArr).enter().append('text')
+			.text(function(d){return d.name + " " + d.listeners + " listeners"})
+				.attr('x', function(d,i){return 5 + d.listeners/100000 })	
+				.attr('y', function(d,i){return (i * 45) +22.5})
+				.attr('class', 'plays-text')
+
+
+
     },
         
     signIn: function(){
@@ -596,6 +614,14 @@ var app = {
         
 
       },
+
+    clickFavorite: function() {
+    	$('.favorite').on('click', function(){
+    		console.log("favorite!");
+    		var bandName = $(this).html();
+    		console.log("name from favorites: ");
+    	});
+    },  
 };
 
 $("#login-modal").click(function(){
