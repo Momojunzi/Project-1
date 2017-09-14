@@ -452,50 +452,38 @@ var app = {
 
         $('#sign-in').on('click', function(){
             event.preventDefault();
-            if (firebase.auth().currentUser) {
-                // [START signout]
-                firebase.auth().signOut();
-                $('#login-modal').modal('hide');
-                $('#logout-user').css('display', 'block');
-                $('#addFavorites').css('display', 'block');
-                $('#fav').css('display', 'block');
-                // [END signout]
-            } else {       
-                var email = $('#sign-in-email').val().trim();
-                var password = $('#sign-in-password').val().trim();
-                if (email.length < 4) {
-                  alert('Please enter an email address.');
-                  return;
-                }
-                if (password.length < 4) {
-                      alert('Please enter a password.');
-                      return;
-                } 
-            }
-
-            // Sign in with email and pass.
-            // [START authwithemail]
+            
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
                 console.log(error);
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                  	console.log('success');
-            		$('#myModal').modal('hide');
-            		$('#logout-user').css('display', 'block');
-            		$('#login-modal').css('display', 'none');
-            		
-                    // User is signed in.
-                    app.userId = user.uid;
+					firebase.auth().signOut();
+					$('#logout-user').css('display', 'block');
+					$('#myModal').modal('hide');
+					$('#logout-user').css('display', 'block');
+					$('#login-modal').css('display', 'none');
+					$('#addFavorites').css('display', 'block');
+					$('#fav').css('display', 'block');
+          		`	app.userId = user.uid;
                     app.signedIn = true;
                     if(app.signedIn === true){
                           app.addFavorites();
                     }
                 	console.log(app.signedIn);
 	            } else {
-	                    // User is signed out
-	            }
+				    var email = $('#sign-in-email').val().trim();
+					var password = $('#sign-in-password').val().trim();
+					if (email.length < 4) {
+					  alert('Please enter an email address.');
+					  return;
+					}
+					if (password.length < 4) {
+						  alert('Please enter a password.');
+						  return;
+					}      
+				}
             });
                 $('#regModal').modal('hide');
             }); 
