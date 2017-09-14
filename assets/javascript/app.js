@@ -120,7 +120,6 @@ var app = {
                 console.log(twitter_url)
                 console.log(insta_url);
                 console.log(fb_url);
-                //insta_handle = insta_url.split('/').pop();
                 app.twitter = twitter_handle;
                 app.instagram = insta_url
                 app.facebook = fb_url;
@@ -482,7 +481,7 @@ var app = {
         });
         if(app.signedIn) {
         	$('#fav').css('display', 'block');
-            $('#addFavorites').css({color: '#42b3f4', display: 'block'});
+            $('#addFavorites').css({color: 'hsl(199, 17%, 99%)', display: 'block'});
         }else{
             $('#addFavorites').css({display: 'none'});
         }
