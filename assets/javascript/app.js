@@ -466,7 +466,7 @@ var app = {
 					$('#login-modal').css('display', 'none');
 					$('#addFavorites').css('display', 'block');
 					$('#fav').css('display', 'block');
-          		`	app.userId = user.uid;
+          			app.userId = user.uid;
                     app.signedIn = true;
                     if(app.signedIn === true){
                           app.addFavorites();
