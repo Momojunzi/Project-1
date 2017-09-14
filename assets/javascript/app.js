@@ -452,7 +452,16 @@ var app = {
 
         $('#sign-in').on('click', function(){
             event.preventDefault();
-            
+		 	var email = $('#sign-in-email').val().trim();
+		 	var password = $('#sign-in-password').val().trim();
+		 	if (email.length < 4) {
+				  alert('Please enter an email address.');
+				  return;
+				}
+				if (password.length < 4) {
+					  alert('Please enter a password.');
+					  return;
+				}      
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
                 console.log(error);
             });
