@@ -67,6 +67,8 @@ var app = {
         app.addFavorites();
         app.signIn();
         app.register();
+        app.forgotPassword();
+        app.logout();
 	},
 
     addBandName: function(){
@@ -426,7 +428,9 @@ var app = {
                 // [START signout]
                 firebase.auth().signOut();
                 $('#login-modal').modal('hide');
-                $('#logout-user').css('display', 'none');
+                $('#logout-user').css('display', 'block');
+                $('#addFavorites').css('display', 'block');
+                $('#fav').css('display', 'block');
                 // [END signout]
             } else {       
                 var email = $('#sign-in-email').val().trim();
@@ -444,18 +448,7 @@ var app = {
             // Sign in with email and pass.
             // [START authwithemail]
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // [START_EXCLUDE]
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
                 console.log(error);
-                $('#sign-in').disabled = false;
-                // [END_EXCLUDE]
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
@@ -498,18 +491,7 @@ var app = {
             });
 
             firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // [START_EXCLUDE]
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
-                console.log(error);
-                $('#sign-in').disabled = false;
-                // [END_EXCLUDE]
+                console.log(error)
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
@@ -551,6 +533,7 @@ var app = {
             console.log(favArr);
         });
         if(app.signedIn) {
+        	$('#fav').css('display', 'block');
             $('#addFavorites').css({color: '#42b3f4', display: 'block'});
         }else{
             $('#addFavorites').css({display: 'none'});
@@ -585,6 +568,34 @@ var app = {
             });
           });
     },
+
+    logout: function() {
+        console.log('test logout');
+        $('#logout-user').on('click', function() {
+            event.preventDefault();
+            console.log('Signed Out');
+            $('#logout-user').css('display', 'none');
+            $('#login-modal').css('display', 'block');
+            $('#addFavorites').css('display', 'none');
+            $('#fav').css('display', 'none');
+            firebase.auth().signOut().catch(function(error) {
+
+                    if (error)
+                    {
+                        alert ('Unable to Sign-out');
+
+                    }
+
+                    else {
+                        console.log ('Signed out Successfully');
+                    }
+
+            });
+            
+        });
+        
+
+      },
 };
 
 $("#login-modal").click(function(){

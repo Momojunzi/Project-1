@@ -13,6 +13,9 @@ html {
   position: relative;
     min-height: 100%;
 }
+#fav {
+  display: none;
+}
 
 #login-modal {
   display: block;
@@ -38,7 +41,7 @@ html {
 }
 
 #addFavorites {
-    display: none;
+  display: none;
 	position: absolute;
 	bottom: 0;
 	text-align: center;
