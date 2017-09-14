@@ -400,7 +400,7 @@ var app = {
                 // [START signout]
                 firebase.auth().signOut();
                 $('#login-modal').modal('hide');
-                $('#logout-user').css('display', 'none');
+                $('#logout-user').css('display', 'block');
                 $('#addFavorites').css('display', 'block');
                 $('#fav').css('display', 'block');
                 // [END signout]
@@ -420,18 +420,7 @@ var app = {
             // Sign in with email and pass.
             // [START authwithemail]
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // [START_EXCLUDE]
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
                 console.log(error);
-                $('#sign-in').disabled = false;
-                // [END_EXCLUDE]
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
@@ -474,18 +463,7 @@ var app = {
             });
 
             firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // [START_EXCLUDE]
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
-                console.log(error);
-                $('#sign-in').disabled = false;
-                // [END_EXCLUDE]
+                console.log(error)
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
@@ -527,6 +505,7 @@ var app = {
             console.log(favArr);
         });
         if(app.signedIn) {
+        	$('#fav').css('display', 'block');
             $('#addFavorites').css({color: '#42b3f4', display: 'block'});
         }else{
             $('#addFavorites').css({display: 'none'});
