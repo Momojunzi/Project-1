@@ -39,7 +39,7 @@ var app = {
     long: "",
     artist: "Glass Animals",
     formattedArtist: "Glass+Animals",
-    ontour: "",
+    ontour: "0",
     spotify: "",
     youtube: "",
     twitter: "",
@@ -143,7 +143,7 @@ var app = {
             method: "GET"
         }).done(function(response){
             console.log(response);
-            app.ontour = response.artist.ontour;
+            //app.ontour = response.artist.ontour;
             console.log(app.ontour);
             console.log(typeof(response.artist.image[3]['#text']));
             app.imageUrl = response.artist.image[3]['#text'];
@@ -328,18 +328,18 @@ var app = {
             
     }, 
 
-    // getGeoPosition: function() {
-    //     navigator.geolocation.getCurrentPosition(function(pos){
-    //         var coords = pos.coords;
-    //         app.lat = coords.latitude; 
-    //         app.long = coords.longitude;
-    //         console.log(app.lat, app.long);
-    //         app.geoposition = true;
-    //         app.googleMaps();
-    //     }, function(err) {
-    //             console.log(err.code) 
-    //     });
-    // },
+    getGeoPosition: function() {
+        navigator.geolocation.getCurrentPosition(function(pos){
+            var coords = pos.coords;
+            app.lat = coords.latitude; 
+            app.long = coords.longitude;
+            console.log(app.lat, app.long);
+            app.geoposition = true;
+            app.googleMaps();
+        }, function(err) {
+                console.log(err.code) 
+        });
+    },
 
     purchaseLinks: function(){
         $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
@@ -384,10 +384,38 @@ var app = {
     },  
 
     d3Function: function() {
-        $("#tour-div").html("");
-        $('#map-title').html('Record Sales Chart');
-        $('#map').html('There are no upcoming tours instead have a look at some record sales data');
-        $('#tour-list-title').html('Record Sales List');
+        $("#map-container").html("");
+        var margin = { top: 10, right: 0, bottom: 20, left: 50},
+        	width = 650,
+        	height = 400;
+    	var svg = d3.select('#map-container').append('svg')
+    		.attr("height", height)
+    		.attr("width", width)
+    		.attr('viewbox', "0 0" + width + " " + height);
+		var yScale = d3.scaleLinear()
+			.range([height - margin.top - margin.bottom, 0]);
+		var xScale = d3.scaleOrdinal()
+			.range([0, width - margin.right - margin.left], .1);
+		var xAxis = d3.axisBottom()
+			.scale(xScale)
+		var yAxis = d3.axisLeft()
+			.scale(yScale)
+		svg.append('g')
+			//.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+			.selectAll('.bar').data(app.trackArr).enter().append('rect')
+				.attr('class', 'bar')
+				.attr('x', function(d){return (width / app.trackArr.length) - 1;})
+				.attr('y', function(d){return d.playcount/100000;})
+				.attr('height', function(d){return d.playcount / 100000;})
+				.attr('length', function(d){return (width / app.trackArr.length) - 2});
+		svg.append('g')
+			.attr('class', 'yaxis')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+			.call(yAxis);
+		svg.append('g')
+			.attr('class', 'xaxis')
+			.attr('transform', 'translate(' + margin.left + ',' + (height - margin.bottom) + ')')
+			.call(xAxis);
     },
         
     signIn: function(){
