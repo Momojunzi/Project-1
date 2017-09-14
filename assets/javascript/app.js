@@ -330,18 +330,18 @@ var app = {
             
     }, 
 
-    // getGeoPosition: function() {
-    //     navigator.geolocation.getCurrentPosition(function(pos){
-    //         var coords = pos.coords;
-    //         app.lat = coords.latitude; 
-    //         app.long = coords.longitude;
-    //         console.log(app.lat, app.long);
-    //         app.geoposition = true;
-    //         app.googleMaps();
-    //     }, function(err) {
-    //             console.log(err.code) 
-    //     });
-    // },
+    getGeoPosition: function() {
+        navigator.geolocation.getCurrentPosition(function(pos){
+            var coords = pos.coords;
+            app.lat = coords.latitude; 
+            app.long = coords.longitude;
+            console.log(app.lat, app.long);
+            app.geoposition = true;
+            app.googleMaps();
+        }, function(err) {
+                console.log(err.code) 
+        });
+    },
 
     purchaseLinks: function(){
         $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
