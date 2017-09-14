@@ -475,8 +475,8 @@ var app = {
             var favArr = Object.values(favobj);
             $('#favorites').empty();
             for(var i=0; i<favArr.length; i++) {
-                var favDiv = $('<h4 class="favorite">').html(favArr[i]);
-                $('#favorites').append(favDiv).append('<hr/>');
+                var favDiv = $('<p class="favorite">').html(favArr[i]);
+                $('#favorites').append(favDiv);
             }
             console.log(favArr);
         });

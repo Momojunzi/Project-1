@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>title</title>
+    <title>Welcome to Bandazz</title>
 
     <!-- Bootstrap 3.3.7 added -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -30,9 +30,9 @@
 	<!-- Nav bar section -->
     <section>
 
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-default navtop">
         <div class="container-fluid data-header">
-          <div class="navbar-header">
+          <div class="navbar-header navtext">
             <a class="navbar-brand">Welcome to Bandazz</a>
           </div>
           <button type="button" class="btn btn-default navbar-btn navbar-right" id="logout-user">Logout</button>
@@ -62,7 +62,7 @@
           <div class="modal fade" id="regModal" tabindex="-1" data-dismiss="modal" role="dialog" aria-labelledby="regModalLabel" hidden>
             <div class="modal-dialog">
               <div class="register-container m1">
-                <h3>Register New Account</h3><br>
+                <h3>Create New Account</h3><br>
                 <form class="form-group">
                   <input type="text" id="sign-up-name" name="username" placeholder="Name">
                   <input type="Email" id ="sign-up-email" name="e-mail" placeholder="Email Address">
@@ -103,6 +103,15 @@
     <!--Main Container -->
     <section>
       <div class="container">
+
+        <!-- name row -->
+        <div class="row">
+
+          <div class="col-md-12 col-sm-12">
+            <h1 class="in-container-hdr" id="bandName">Band Name</h1>
+            <div id="addFavorites"><span class='glyphicon glyphicon-plus' aria-hidden="true"></span> Add to favorites</div>
+          </div>
+	       </div>
         
         <!-- row 1 for band info and listen/purchase -->
         <div class="row">
@@ -110,29 +119,26 @@
         <!-- Band Details column-->
           <div class="col-md-8 col-sm-12">
             
-            <!-- name row -->
-            <div class="row">
-
-              <div class="col-md-12 col-sm-12">
-                <h1 class="in-container-hdr" id="bandName">Band Name</h1>
-                <div id="addFavorites"><span class='glyphicon glyphicon-plus' aria-hidden="true"></span> Add to favorites</div>
-              </div>
-			       </div>
             
             <!-- content row -->
-            <div class="row">
-              <!--Image column -->
-              <div class="col-lg-4 col-md-4 col-sm-12">
-                <div id="image-div"> 
-                  <h4 class="in-container-hdr">artist image</h4> 
-                </div>
-              </div>
+            <div class="row bio-row">
+              <div class="panel panel-default">
+                <div class="panel-body navtop bio-panel">
+                  <!--Image column -->
+                  <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div id="image-div"> 
+                      <h4 class="in-container-hdr">artist image</h4> 
+                    </div>
+                  </div>
 
-              <!-- Content column-->
-              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <div id="content-div"> 
-                  <h4 class="in-container-hdr">artist bio</h4> 
-              	</div>
+                  <!-- Content column-->
+                  <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <div id="content-div"> 
+                      <h4 class="in-container-hdr">artist bio</h4> 
+                  	</div>
+                  </div>
+
+                </div>
               </div>
 
             <!-- close content row -->
@@ -142,64 +148,74 @@
           </div>
 
           <!-- Listen & favorite column-->
-          <div class="col-md-4 col-sm-12 col-xs-12">
+          <div class="col-md-4 col-sm-12 col-xs-12 listen">
 
             <!-- listen/purchase row -->
-            <div class="row"> 
+            <div class="row">
+              <div class="panel panel-default navtop">
+                <div class="panel-heading head-text">Listen and Purchase</div> 
+                  <div class="panel-body">
 
-              <div>
-                <h4 class="in-container-hdr">Listen and Buy Here</h4>
+                      <div class="col-md-12">
+                        
+                          <div class="row" id="purchase-row">
 
-              <div class="col-md-12">
-                <div class="row" id="listen-display"></div>
-                
-                  <div class="row" id="listen-row">
-                    <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                              <a id="itunes-purchase" href="#" target="_blank">
+                                <img src="assets/images/icons/itunes2.svg" class="icon bar-icon">
+                              </a>
+                            </div>
 
-                      <a id="spotify-widget">
-                        <img src="assets/images/icons/spotify.svg" class="icon">
-                      </a>
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                              <a id="google-purchase" href="#" target="_blank">
+                                <img src="assets/images/icons/google-play.svg" class="icon large-icon">
+                              </a>
+                            </div>  
+
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                              <a id="amazon-purchase" href="#" target="_blank">
+                                <img src="assets/images/icons/amazon-music2.svg" class="icon bar-icon">
+                              </a>
+                            </div>
+
+                          </div>
+
+                          <div class="row" id="listen-row">
+                          
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                              <a id="spotify-widget">
+                                <img src="assets/images/icons/spotify.svg" class="icon large-icon">
+                              </a>
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                              <a id="youtube-link" href="#" target="_blank">
+                                <img src="assets/images/icons/youtube.svg" class="icon large-icon">
+                              </a>
+                            </div>
+
+                          </div>
+
+                        <div class="row" id="listen-display"></div>
+
                     </div>
-
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <a id="youtube-link" href="#" target="_blank">
-                      <img src="assets/images/icons/youtube.svg" class="icon">
-                    </a>
                   </div>
                 </div>
 
-                <div class="row" id="purchase-row">
-                  <div class="col-md-4 col-sm-2 col-xs-4">
-                    <a id="itunes-purchase" href="#" target="_blank">
-                      <img src="assets/images/icons/itunes2.svg" class="icon">
-                    </a>
-                 </div>
-
-                  <div class="col-md-4 col-sm-2 col-xs-4">
-                    <a id="google-purchase" href="#" target="_blank">
-                      <img src="assets/images/icons/google-play.svg" class="icon">
-                    </a>
-                  </div>  
-
-                  <div class="col-md-4 col-sm-2 col-xs-4">
-                    <a id="amazon-purchase" href="#" target="_blank">
-                      <img src="assets/images/icons/amazon-music2.svg" class="icon">
-                    </a>
-                  </div>
-                </div>
-                <!-- close purchase row -->
-                </div>
-
+              <!-- close purchase row -->
               </div>
-            </div>
 
             <!-- Favorites row -->
             <div class="row" id="fav">
-              <div>
-                <h4 class="in-container-hdr">Favorites</h4>
-                <div id="favorites"></div>
+
+              <div class="panel panel-default navtop">
+                <div class="panel-heading head-text">Favorites</div> 
+                  <div class="panel-body">
+                    <div id="favorites"></div>
+                  </div>
+                </div>
+
               </div>
-            </div>
           
           <!-- close the listen/fav column -->
           </div>
@@ -217,7 +233,9 @@
               <div class="col-md-12">
                 <div> 
                   <h4 class="in-container-hdr" id="map-title">Upcoming Tour Locations</h4>
-                  <div id="map"></div>
+                    <div class="map-responsive">
+                      <div id="map" class="map-inner"></div>
+                    </div>
                 </div>
               </div>
 
@@ -236,52 +254,53 @@
 
             <div class="row">
 
-              <div class="panel panel-default">
-                <div class="panel-heading">Socials</div>
+              <div class="panel panel-default navtop">
+                <div class="panel-heading head-text">Follow Your Favs</div>
                   
                   <div class="panel-body">
 
                     <div class="row">
                       <div class="col-md-4 col-sm-4 col-xs-4">
                         <a id="twitter-link">
-                          <img src="assets/images/icons/twitter.svg" class="icon">
+                          <img src="assets/images/icons/twitter.svg" class="icon large-icon">
                         </a>
                       </div>
                     
                       <div class="col-md-4 col-sm-4 col-xs-4">
                         <a id="instagram-link" href="#" target="_blank">
-                          <img src="assets/images/icons/instagram.svg" class="icon">
+                          <img src="assets/images/icons/instagram.svg" class="icon large-icon">
                         </a>
                       </div>
 
                       <div class="col-md-4 col-sm-4 col-xs-4">
                         <a id="facebook-link" href="#" target="_blank">
-                          <img src="assets/images/icons/facebook.svg" class="icon">
+                          <img src="assets/images/icons/facebook.svg" class="icon large-icon">
                         </a>
                       </div>
-
                     </div>
+
                   </div>
                 </div>
 
-              <div class="row" id="social-display"></div>
-            </div>
+              </div>
+            <div class="row" id="social-display"></div>
+      		</div>
 
-    		<!-- close the second row -->
-    		</div>
+        <!-- close the second row -->
+        </div>
 
       <!-- close the container -->
       </div>
     </section>
 
-    <nav class="navbar navbar-default navbar-fixed-bottom" id="footer">
+    <nav class="navbar navbar-default navbar-fixed-bottom navbot" id="footer">
       <div class="container">
-        2017
+        Bandazz 2017
+        <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a>, <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
       </div>
     </nav>
 
     <script type="text/javascript" src="assets/javascript/app.js"></script>
 	
   </body>
-
 </html>
