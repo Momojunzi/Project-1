@@ -67,6 +67,8 @@ var app = {
         app.addFavorites();
         app.signIn();
         app.register();
+        app.forgotPassword();
+        app.logout();
 	},
 
     addBandName: function(){
@@ -399,6 +401,8 @@ var app = {
                 firebase.auth().signOut();
                 $('#login-modal').modal('hide');
                 $('#logout-user').css('display', 'none');
+                $('#addFavorites').css('display', 'block');
+                $('#fav').css('display', 'block');
                 // [END signout]
             } else {       
                 var email = $('#sign-in-email').val().trim();
@@ -557,6 +561,34 @@ var app = {
             });
           });
     },
+
+    logout: function() {
+        console.log('test logout');
+        $('#logout-user').on('click', function() {
+            event.preventDefault();
+            console.log('Signed Out');
+            $('#logout-user').css('display', 'none');
+            $('#login-modal').css('display', 'block');
+            $('#addFavorites').css('display', 'none');
+            $('#fav').css('display', 'none');
+            firebase.auth().signOut().catch(function(error) {
+
+                    if (error)
+                    {
+                        alert ('Unable to Sign-out');
+
+                    }
+
+                    else {
+                        console.log ('Signed out Successfully');
+                    }
+
+            });
+            
+        });
+        
+
+      },
 };
 
 $("#login-modal").click(function(){
