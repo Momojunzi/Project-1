@@ -58,11 +58,11 @@ var app = {
         app.purchaseLinks();
         app.searchBand();
         app.spotifyWidget();
-        app.youtubeLink();
-        app.soundcloud();
-        app.twitter();
-        app.instagram();
-        app.facebook();
+        //app.youtubeLink();
+        //app.soundcloud();
+		app.twitter();
+        //app.instagram();
+        //app.facebook();
         app.addFavorites();
         app.signIn();
         app.register();
@@ -106,7 +106,7 @@ var app = {
                 //get short bio and parse the markup returned
                 app.bio = response.data.artist_bio_short.replace(/(\[.*?\])/g, '');
                 //console.log(app.bio);
-                $('#content-div').html('<h4>' + app.bio + '<h4>');//remove and put in a different function that draws to the page
+                $('#content-div').html('<p>' + app.bio + '<p>');//remove and put in a different function that draws to the page
             });
             // getting twitter handle
             $.ajax({
@@ -120,10 +120,11 @@ var app = {
                 console.log(twitter_url)
                 console.log(insta_url);
                 console.log(fb_url);
-                //insta_handle = insta_url.split('/').pop();
                 app.twitter = twitter_handle;
                 app.instagram = insta_url
                 app.facebook = fb_url;
+                app.socialLinks();
+                app.listenLinks();
                 console.log('twit: ', app.twitter, 'insta: ', app.instagram)
             });
         });
@@ -161,9 +162,7 @@ var app = {
 		            }
 		        }
 	        });
-
-            
-        });
+		});
     },
 
     searchBand: function() {
@@ -187,39 +186,18 @@ var app = {
 			app.callLastFm();
 			app.purchaseLinks();
 			console.log(app.formattedArtist);
+			if(app.ontour === '1') {
+				$("#map-title").html('Upcoming Tour Locations');
+                $('#tour-list-title').html('Upcoming Tour Dates');
+			}
+			if(app.ontour === '0'){
+				$("#map-title").css('font-size', '1em').html('Top Tracks By Plays');
+                $('#tour-list-title').css('font-size', '1em').html('Top Tracks By Listeners');
+			}
 		});
 	},
 
-    spotifyWidget: function() {
-        $('#spotify-widget').on('click', function() {
-            event.preventDefault();
-            console.log(app.spotify);
-            // re-align widget, override the default margin
-            $('#listen-display').attr('style','margin: 10px 0px 10px 0px; ');
-            $('#listen-display').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
-        });
-    },
-
-    youtubeLink: function() {
-        $('#youtube-link').on('click', function() {
-            event.preventDefault();
-            console.log(app.youtube);
-            window.open('http://www.youtube.com/channel/' + app.youtube);
-        });
-    }, 
-
-    soundcloud: function() {
-        $('#soundcloud-link').on('click', function() {
-            event.preventDefault();
-            console.log(app.artist.replace(/\s/g, ''));
-            // does not always work. some artist's links are different from just their names
-            // for example, soundcloud.com/glassanimals works fine but
-            // kendrick lamar is soundcloud.com/kendrick-lamar-music, not soundcloud.com/kendricklamar
-            window.open('http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
-        });
-    },
-
-    callJambase: function() {
+	callJambase: function() {
         $.ajax({
             url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
             method: 'GET'
@@ -245,8 +223,7 @@ var app = {
                         //app.logTours(eventArr[i]);
                         console.log(eventArr[i].Venue.Name, eventArr[i].Date, eventArr[i].Venue.City, eventArr[i].Venue.StateCode, eventArr[i].TicketUrl);
                         var location = $('<h3>').html(eventArr[i].Venue.Name);
-
-                        var date = $('<h4>').html(eventArr[i].Date);
+						var date = $('<h4>').html(eventArr[i].Date);
                         var city = $('<h4>').html(eventArr[i].Venue.City + ", " + eventArr[i].Venue.StateCode);
                         var ticketUrl = $('<a>').attr({href: eventArr[i].TicketUrl, target: "_blank"}).html("Buy tickets Here");
                         var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
@@ -267,6 +244,31 @@ var app = {
         $('#tour-div').append(concertDiv);
     },
 
+    //listen links
+    spotifyWidget: function() {
+        $('#spotify-widget').on('click', function() {
+            event.preventDefault();
+            console.log(app.spotify);
+            // re-align widget, override the default margin
+            $('#listen-display').attr('style','margin: 10px 0px 10px 0px; ');
+            $('#listen-display').html('<iframe src="https://open.spotify.com/embed?uri=spotify:artist:'+ app.spotify +'" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>')
+        });
+    },
+
+    listenLinks: function() {
+        $('#youtube-link').attr("href", 'http://www.youtube.com/channel/' + app.youtube);
+        //$('#soundcloud-link').attr("href", 'http://soundcloud.com/' + app.artist.replace(/\s/g, '').toLowerCase());
+      },
+
+    // purchase links
+    purchaseLinks: function(){
+        $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/music/");
+        $('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
+        $('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
+
+    },
+
+    //social links
     twitter: function() {
         $('#twitter-link').on('click', function() {
             event.preventDefault();
@@ -284,21 +286,12 @@ var app = {
         });
     },
 
-    instagram: function() {
-        $('#instagram-link').on('click', function() {
-            event.preventDefault();
-            window.open(app.instagram);
-        });
-    },
+    socialLinks: function() {
+        $('#instagram-link').attr("href", app.instagram);
+        $('#facebook-link').attr("href", app.facebook);
+      },
 
-    facebook: function() {
-        $('#facebook-link').on('click', function() {
-            event.preventDefault();
-            window.open(app.facebook);
-        });
-    },
-
-	 googleMaps: function() {
+     googleMaps: function() {
             mapOption = {
                 zoom: 10,
                 center: new google.maps.LatLng(app.lat, app.long),
@@ -338,14 +331,7 @@ var app = {
         });
     },
 
-    purchaseLinks: function(){
-        $('#itunes-purchase').attr("href", "https://www.apple.com/itunes/");
-        $('#google-purchase').attr('href', 'https://play.google.com/store/search?q='+app.formattedArtist);
-        $('#amazon-purchase').attr('href', 'https://www.amazon.com/s/ref=nb_sb_ss_i_1_5?url=search-alias%3Ddigital-music&field-keywords='+app.formattedArtist);
-
-    },
-
-    farmersMarket: function() {
+	farmersMarket: function() {
         zip = app.testZip;
         $.ajax({
             url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
@@ -382,7 +368,7 @@ var app = {
 
     d3Function: function() {
         $("#map").html("");
-        $('#map-title').html('<h3>Top Tracks by plays</h3>')
+       // $('#map-title').html('<h3>Top Tracks by plays</h3>')
         //var trackArr =[{name:"one", playcount:1000000, listens:1006000},{name:'two', playcount:140500,listens:100600},{name:"three", playcount:105000,listens:102650},{name:"four", playcount:150000,listens:100800}]
         var tracks = app.trackArr.map(function(t){
             return t.name;
@@ -420,7 +406,7 @@ var app = {
 			.attr('class', 'plays-text');
 
 		$("#tour-div").html("");
-        $('#tour-list-title').html('<h3>Top Tracks by listeners</h3')
+       // $('#tour-list-title').html('<h3>Top Tracks by listeners</h3')
        	var width = 750;
        	var height = 450;
        	var svg = d3.select('#tour-div').append('svg')
@@ -441,7 +427,7 @@ var app = {
         
     signIn: function(){
 
-        $('#sign-in').on('click', function(){
+        $('#sign-in').on('click', function(event){
             event.preventDefault();
 		 	var email = $('#sign-in-email').val().trim();
 		 	var password = $('#sign-in-password').val().trim();
@@ -545,14 +531,13 @@ var app = {
             for(var i=0; i<favArr.length; i++) {
                 var favDiv = $('<h4>').addClass("favorite-entry").html(favArr[i]);
                 $('#favorites').append(favDiv).append('<hr/>');
-
             }
             app.clickFavorite();
             console.log(favArr);
         });
         if(app.signedIn) {
         	$('#fav').css('display', 'block');
-            $('#addFavorites').css({color: '#42b3f4', display: 'block'});
+            $('#addFavorites').css({color: 'hsl(199, 17%, 99%)', display: 'block'});
         }else{
             $('#addFavorites').css({display: 'none'});
         }
@@ -598,22 +583,18 @@ var app = {
             $('#fav').css('display', 'none');
             firebase.auth().signOut().catch(function(error) {
 
-                    if (error)
-                    {
-                        alert ('Unable to Sign-out');
+                if (error)
+                {
+                    alert ('Unable to Sign-out');
 
-                    }
+                }
 
-                    else {
-                        console.log ('Signed out Successfully');
-                    }
-
-            });
-            
+                else {
+                    console.log ('Signed out Successfully');
+                }
+			});
         });
-        
-
-      },
+	},
 
     clickFavorite: function() {
         var clickedFav = $(".favorite-entry");
