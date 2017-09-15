@@ -134,7 +134,7 @@ var app = {
         // call lastFm for img
         
         $.ajax({
-            url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
+            url: "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
             method: "GET"
         }).done(function(response){
             console.log(response);
@@ -144,7 +144,7 @@ var app = {
             app.imageUrl = response.artist.image[3]['#text'];
             $("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
 			$.ajax({
-	            url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
+	            url: "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
 	        }).done(function(response) {
 	            app.trackArr = [];
 	            for (var i=0; i<10; i++) {
