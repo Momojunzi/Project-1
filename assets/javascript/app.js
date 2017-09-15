@@ -153,8 +153,12 @@ var app = {
 	            }
 	            if (app.ontour === "0"){
 		            app.d3Function();
-		        }
+		            $("#map-title").html('Top Tracks By Plays');
+                	$('#tour-list-title').html('Top Tracks By Listeners');
+				}
 		        if(app.ontour === "1"){
+		        	$("#map-title").html('Upcoming Tour Locations');
+                	$('#tour-list-title').html('Upcoming Tour Dates');
 		            if(app.geoposition === false) {
 		                app.getGeoPosition();
 		            }else{
@@ -186,14 +190,14 @@ var app = {
 			app.callLastFm();
 			app.purchaseLinks();
 			console.log(app.formattedArtist);
-			if(app.ontour === '1') {
-				$("#map-title").html('Upcoming Tour Locations');
-                $('#tour-list-title').html('Upcoming Tour Dates');
-			}
-			if(app.ontour === '0'){
-				$("#map-title").css('font-size', '1em').html('Top Tracks By Plays');
-                $('#tour-list-title').css('font-size', '1em').html('Top Tracks By Listeners');
-			}
+			// if(app.ontour === '1') {
+			// 	$("#map-title").html('Upcoming Tour Locations');
+   //              $('#tour-list-title').html('Upcoming Tour Dates');
+			// }
+			// if(app.ontour === '0'){
+			// 	$("#map-title").html('Top Tracks By Plays');
+   //              $('#tour-list-title').html('Top Tracks By Listeners');
+			// }
 		});
 	},
 
