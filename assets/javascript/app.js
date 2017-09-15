@@ -317,8 +317,8 @@ var app = {
             
             //console.log(map);
             coordArr = app.address;
-            app.farmersMarket();
-            //app.callJambase();
+            //app.farmersMarket();
+            app.callJambase();
             
     }, 
 
