@@ -60,8 +60,7 @@ var app = {
         app.spotifyWidget();
         //app.youtubeLink();
         //app.soundcloud();
-        //app.itunes();
-        app.twitter();
+		app.twitter();
         //app.instagram();
         //app.facebook();
         app.addFavorites();
@@ -69,6 +68,7 @@ var app = {
         app.register();
         app.forgotPassword();
         app.logout();
+        app.clickFavorite();
 	},
 
     addBandName: function(){
@@ -132,15 +132,7 @@ var app = {
 
     callLastFm: function(){
         // call lastFm for img
-        $.ajax({
-            url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
-        }).done(function(response) {
-            app.trackArr = [];
-            for (var i=0; i<10; i++) {
-                app.trackArr.push(response.toptracks.track[i]);
-                console.log(app.trackArr);
-            }
-        });
+        
         $.ajax({
             url: "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json",
             method: "GET"
@@ -151,17 +143,30 @@ var app = {
             console.log(typeof(response.artist.image[3]['#text']));
             app.imageUrl = response.artist.image[3]['#text'];
             $("#image-div").html('<img class="img-responsive" src=' + app.imageUrl + '>');
-            if (app.ontour === "0"){
-                app.d3Function();
-            }
-            if(app.ontour === "1"){
-                if(app.geoposition === false) {
-                    app.getGeoPosition();
-                }else{
-                    app.googleMaps();
-                }
-            }
-        });
+			$.ajax({
+	            url: "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + app.formattedArtist + "&api_key=651401dc542766eb3d39ccee850cb749&format=json"
+	        }).done(function(response) {
+	            app.trackArr = [];
+	            for (var i=0; i<10; i++) {
+	                app.trackArr.push(response.toptracks.track[i]);
+	                console.log(app.trackArr);
+	            }
+	            if (app.ontour === "0"){
+		            app.d3Function();
+		            $("#map-title").html('Top Tracks By Plays');
+                	$('#tour-list-title').html('Top Tracks By Listeners');
+				}
+		        if(app.ontour === "1"){
+		        	$("#map-title").html('Upcoming Tour Locations');
+                	$('#tour-list-title').html('Upcoming Tour Dates');
+		            if(app.geoposition === false) {
+		                app.getGeoPosition();
+		            }else{
+		                app.googleMaps();
+		            }
+		        }
+	        });
+		});
     },
 
     searchBand: function() {
@@ -185,11 +190,18 @@ var app = {
 			app.callLastFm();
 			app.purchaseLinks();
 			console.log(app.formattedArtist);
+			// if(app.ontour === '1') {
+			// 	$("#map-title").html('Upcoming Tour Locations');
+   //              $('#tour-list-title').html('Upcoming Tour Dates');
+			// }
+			// if(app.ontour === '0'){
+			// 	$("#map-title").html('Top Tracks By Plays');
+   //              $('#tour-list-title').html('Top Tracks By Listeners');
+			// }
 		});
 	},
 
-
-    callJambase: function() {
+	callJambase: function() {
         $.ajax({
             url: 'http://api.jambase.com/artists?name=' + app.formattedArtist+ '&page=0&api_key=5md9jsgapzxv8aw35nmdsbz5',
             method: 'GET'
@@ -215,8 +227,7 @@ var app = {
                         //app.logTours(eventArr[i]);
                         console.log(eventArr[i].Venue.Name, eventArr[i].Date, eventArr[i].Venue.City, eventArr[i].Venue.StateCode, eventArr[i].TicketUrl);
                         var location = $('<h3>').html(eventArr[i].Venue.Name);
-
-                        var date = $('<h4>').html(eventArr[i].Date);
+						var date = $('<h4>').html(eventArr[i].Date);
                         var city = $('<h4>').html(eventArr[i].Venue.City + ", " + eventArr[i].Venue.StateCode);
                         var ticketUrl = $('<a>').attr({href: eventArr[i].TicketUrl, target: "_blank"}).html("Buy tickets Here");
                         var concertDiv= $('<div class="concert-div">').append(location, date, city, ticketUrl, '<hr style="border-width:1px" />');
@@ -324,8 +335,7 @@ var app = {
         });
     },
 
-
-    farmersMarket: function() {
+	farmersMarket: function() {
         zip = app.testZip;
         $.ajax({
             url:  "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
@@ -361,60 +371,109 @@ var app = {
     },  
 
     d3Function: function() {
-        $("#tour-div").html("");
-        $('#map-title').html('Record Sales Chart');
-        $('#map').html('There are no upcoming tours instead have a look at some record sales data');
-        $('#tour-list-title').html('Record Sales List');
+        $("#map").html("");
+       // $('#map-title').html('<h3>Top Tracks by plays</h3>')
+        //var trackArr =[{name:"one", playcount:1000000, listens:1006000},{name:'two', playcount:140500,listens:100600},{name:"three", playcount:105000,listens:102650},{name:"four", playcount:150000,listens:100800}]
+        var tracks = app.trackArr.map(function(t){
+            return t.name;
+        });
+        var margin = {top: 10, right: 0, bottom: 20, left: 50}
+       	var width = 750;
+       	var height = 450;
+       	var xScale = d3.scaleLinear()
+			.domain([0, app.trackArr[1].playcount/*d3.max(trackArr, function(d){return d.playcount})]*/])
+       		.range([0, width-margin.left-margin.right])
+			.nice();
+        var listenxScale = d3.scaleLinear()
+			.domain([0, app.trackArr[1].listeners/*d3.max(trackArr, function(d){return d.playcount})]*/])
+			.range([0, width-margin.left-margin.right])
+			.nice();
+        var trackScale = d3.scaleBand()
+			.domain([0, tracks])
+			.range([0, height/(tracks.length/2)])
+		.paddingInner(0.1);
+        var bandwidth = trackScale.bandwidth();
+       	var svg = d3.select('#map').append('svg')
+       		.attr('width', width)
+       		.attr('height', height);
+		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
+			.attr('height', bandwidth)
+			.attr('width', function(d,i){return xScale(d.playcount)})
+			//.attr('width', function(d,i){return xScale(d.playcount/1000) - width - margin.left })
+			.attr('x', 0)
+			.attr('y', function(d,i){return (i * (bandwidth +1))})
+			.attr('class', 'bar');
+		svg.selectAll('text').data(app.trackArr).enter().append('text')
+			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.playcount + " plays"})
+			.attr('x', margin.left/2)
+			.attr('y', function(d,i){return i * bandwidth + (bandwidth)})
+			.attr('class', 'plays-text');
+
+		$("#tour-div").html("");
+       // $('#tour-list-title').html('<h3>Top Tracks by listeners</h3')
+       	var width = 750;
+       	var height = 450;
+       	var svg = d3.select('#tour-div').append('svg')
+			.attr('width', width)
+			.attr('height', height);
+		svg.selectAll('rect').data(app.trackArr).enter().append('rect')
+			.attr('height', bandwidth)
+			.attr('width', function(d,i){return listenxScale(d.listeners)})
+			.attr('x', 0)
+			.attr('y', function(d,i){return (i * (bandwidth +1))})
+			.attr('class', 'listen-bar');
+        svg.selectAll('text').data(app.trackArr).enter().append('text')
+			.text(function(d,i){return (i+1) + ":  " + d.name + " " + d.listeners + " listeners"})
+			.attr('x', margin.left/2)
+			.attr('y', function(d,i){return i * bandwidth + (bandwidth/2)})
+			.attr('class', 'plays-text');
     },
         
     signIn: function(){
 
-        $('#sign-in').on('click', function(){
+        $('#sign-in').on('click', function(event){
             event.preventDefault();
-            if (firebase.auth().currentUser) {
-                // [START signout]
-                firebase.auth().signOut();
-                $('#login-modal').modal('hide');
-                $('#logout-user').css('display', 'block');
-                $('#addFavorites').css('display', 'block');
-                $('#fav').css('display', 'block');
-                // [END signout]
-            } else {       
-                var email = $('#sign-in-email').val().trim();
-                var password = $('#sign-in-password').val().trim();
-                if (email.length < 4) {
-                  alert('Please enter an email address.');
-                  return;
-                }
-                if (password.length < 4) {
-                      alert('Please enter a password.');
-                      return;
-                } 
-            }
-
-            // Sign in with email and pass.
-            // [START authwithemail]
+		 	var email = $('#sign-in-email').val().trim();
+		 	var password = $('#sign-in-password').val().trim();
+		 	if (email.length < 4) {
+				  alert('Please enter an email address.');
+				  return;
+				}
+				if (password.length < 4) {
+					  alert('Please enter a password.');
+					  return;
+				}      
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
                 console.log(error);
             });
 
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                  	console.log('success');
-            		$('#myModal').modal('hide');
-            		$('#logout-user').css('display', 'block');
-            		$('#login-modal').css('display', 'none');
-            		
-                    // User is signed in.
-                    app.userId = user.uid;
+					firebase.auth().signOut();
+					$('#logout-user').css('display', 'block');
+					$('#myModal').modal('hide');
+					$('#logout-user').css('display', 'block');
+					$('#login-modal').css('display', 'none');
+					$('#addFavorites').css('display', 'block');
+					$('#fav').css('display', 'block');
+          			app.userId = user.uid;
                     app.signedIn = true;
                     if(app.signedIn === true){
                           app.addFavorites();
                     }
                 	console.log(app.signedIn);
 	            } else {
-	                    // User is signed out
-	            }
+				    var email = $('#sign-in-email').val().trim();
+					var password = $('#sign-in-password').val().trim();
+					if (email.length < 4) {
+					  alert('Please enter an email address.');
+					  return;
+					}
+					if (password.length < 4) {
+						  alert('Please enter a password.');
+						  return;
+					}      
+				}
             });
                 $('#regModal').modal('hide');
             }); 
@@ -474,9 +533,10 @@ var app = {
             var favArr = Object.values(favobj);
             $('#favorites').empty();
             for(var i=0; i<favArr.length; i++) {
-                var favDiv = $('<p class="favorite">').html(favArr[i]);
-                $('#favorites').append(favDiv);
+                var favDiv = $('<h4>').addClass("favorite-entry").html(favArr[i]);
+                $('#favorites').append(favDiv).append('<hr/>');
             }
+            app.clickFavorite();
             console.log(favArr);
         });
         if(app.signedIn) {
@@ -527,22 +587,42 @@ var app = {
             $('#fav').css('display', 'none');
             firebase.auth().signOut().catch(function(error) {
 
-                    if (error)
-                    {
-                        alert ('Unable to Sign-out');
+                if (error)
+                {
+                    alert ('Unable to Sign-out');
 
-                    }
+                }
 
-                    else {
-                        console.log ('Signed out Successfully');
-                    }
-
-            });
-            
+                else {
+                    console.log ('Signed out Successfully');
+                }
+			});
         });
-        
+	},
 
-      },
+    clickFavorite: function() {
+        var clickedFav = $(".favorite-entry");
+    	clickedFav.on('click', function(){
+    		console.log("favorite!");
+            $('#social-display').html('');
+            $('#listen-display').html('');
+            $('#tour-div').html('');
+            var searchedArtist = $(this).html();
+            console.log(searchedArtist);
+            app.artist = searchedArtist;
+            console.log(app.artist);
+            // format artist name for query string
+            app.formattedArtist = searchedArtist.split(" ").join('+');
+            console.log(app.formattedArtist);
+            // recall music graph and last fm to grab artist info
+            app.addBandName();
+            app.callMusicGraph();
+            app.callLastFm();
+            app.purchaseLinks();
+            console.log(app.formattedArtist);
+
+    	});
+    }
 };
 
 $("#login-modal").click(function(){
