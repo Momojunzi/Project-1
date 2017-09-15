@@ -195,6 +195,21 @@ p {
 	color: #2680AB;
 }*/
 
+
+.bar{
+  stroke: none;
+  fill: steelblue;
+}
+
+.listen-bar{
+  stroke: none;
+  fill: firebrick;
+}
+
+.plays-text {
+  fill: white;
+}
+
 .navbar-default .navbar-brand {
 	color: #42535C;
 }
@@ -222,3 +237,4 @@ p {
 	color: #37454C;
 	background-color: hsl(199, 12%, 94%);
 }
+
